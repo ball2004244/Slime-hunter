@@ -1,23 +1,30 @@
 import pygame as pg
-from pygame.locals import *
 import configparser
 
+# Initialize Pygame
 pg.init()
 
-# get data from config.cfg
+# Read the configuration file
 config = configparser.ConfigParser()
 config.read('config.cfg')
-screen_width = config.getint('window', 'WIDTH')
-screen_height = config.getint('window', 'HEIGHT')
-screen_title = config.get('window', 'TITLE')
 
-COLOR = {}
-for color_name in config.options('color'):
-    COLOR[color_name] = tuple(map(int, config.get('color', color_name).split(',')))
+# Get the window settings from the configuration file
+window_config = config['window']
+screen_width = window_config.getint('WIDTH')
+screen_height = window_config.getint('HEIGHT')
+screen_title = window_config.get('TITLE')
+
+# Get the color settings from the configuration file
+color_config = config['color']
+COLOR = {color_name: tuple(map(int, color_rgb.split(',')))
+         for color_name, color_rgb in color_config.items()}
+
+#  Set up the window
+Screen = pg.display.set_mode((screen_width, screen_height))
 
 def screen_setup():
-    global Screen
-    Screen = pg.display.set_mode((screen_width, screen_height))
     pg.display.set_caption(screen_title)
-    # set screen to white 
-    Screen.fill(COLOR['white'])
+
+
+if __name__ == '__main__':
+    print(Screen.get_height())
