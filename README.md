@@ -8,7 +8,7 @@ The game is written in Pygame. The general idea is a simple 2D game with top-dow
 2. Run `python main.py` to start the game
 
 ## Controls
-- WASD to move
+- WASD/arrow keys to move
 - Left click to attack
 - Right click to interact with objects
 - I to open inventory/crafting menu
