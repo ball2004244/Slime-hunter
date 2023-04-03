@@ -1,34 +1,51 @@
 import pygame as pg
 from pygame.locals import *
-from setup import Screen, COLOR, screen_setup
+from setup import SCREEN, COLOR, window_setup, FPS_clock
 from control import Control
-from entity.player import Player
-from entity.enemy import Slime
+from character.player import Player
+from character.enemy import Slime
+from item.apple import Apple
 
 # create a simple pygame window
 pg.init()
 
 # set up the window
-screen_setup()
+window_setup()
+fps_clock = FPS_clock()
 
 # create instances before loop
-player = Player(100, 100, 50, 50, COLOR['green'])
-slime = Slime(200, 200, 50, 50, COLOR['red'])
-
+player = Player(100, 100, 70, 70, COLOR['green'])
+slime = Slime(200, 200, 100, 100, COLOR['gray'])
+apple = Apple(300, 300, 30, 30, COLOR['red'])
+apple2 = Apple(400, 400, 30, 30, COLOR['red'])
 control = Control(player)
+
+item_list = [apple, apple2]
+enemy_list = [slime]
+
+# create pygame sprite groups
+item_group = pg.sprite.Group()
+enemy_group = pg.sprite.Group()
+
+# loop through the item list and add them to the item group
+for item in item_list:
+    item_group.add(item)
+
+# loop through the enemy list and add them to the enemy group
+for enemy in enemy_list:
+    enemy_group.add(enemy)
 # main game loop
 while True:
     # fill screen with white
-    Screen.fill(COLOR['white'])
+    SCREEN.fill(COLOR['white'])
 
-    player.draw(Screen)
-    slime.draw(Screen)
+    player.draw(SCREEN)
+    slime.draw(SCREEN)
+
+    item_group.draw(SCREEN)
 
     # process the user keyboard + mouse input
-    control.event_loop()            
+    control.event_loop(item_list, enemy_list)            
 
+    fps_clock.display_fps(SCREEN)
     pg.display.update()
-
-
-
-

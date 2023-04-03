@@ -1,6 +1,6 @@
 import pygame as pg 
 from pygame.locals import *
-from setup import Screen
+from setup import SCREEN
 
 pg.init()
 
@@ -26,7 +26,7 @@ class Player(pg.sprite.Sprite):
         self.mp = 100
         self.attack_power = 10
         self.defense = 10
-        self.speed = 5
+        self.speed = 3
 
     # create 4 functions to move the character
     def move_up(self): 
@@ -35,7 +35,7 @@ class Player(pg.sprite.Sprite):
             self.direction = 'up'
 
     def move_down(self):
-        if self.rect.y < Screen.get_height() - self.rect.height:
+        if self.rect.y < SCREEN.get_height() - self.rect.height:
             self.rect.y += self.speed
             self.direction = 'down'
 
@@ -45,26 +45,29 @@ class Player(pg.sprite.Sprite):
             self.direction = 'left'
 
     def move_right(self):
-        if self.rect.x < Screen.get_width() - self.rect.width:
+        if self.rect.x < SCREEN.get_width() - self.rect.width:
             self.rect.x += self.speed
             self.direction = 'right'
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def attack(self):
+    def attack(self, enemy):
         self.attack_state = True
-        print('Attackkkk!')
+        if self.rect.colliderect(enemy.rect):
+            print('Attack!', enemy)
 
         # wait for 0.5 second
         self.attack_state = False
 
-    def pickup(self):
+    def pickup(self, item):
         self.pickup_state = True
-        print('Pickup!')
+
+        if self.rect.colliderect(item.rect):
+            print('Pick up!', item)
 
         # wait for 0.5 second
         self.pickup_state = False
 
 if __name__ == '__main__':
-    print(Screen.get_height())
+    print('This is a module for player class. Please run main.py to start the game.')

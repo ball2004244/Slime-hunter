@@ -21,20 +21,24 @@ class Control:
         if keys[K_RIGHT] or keys[K_d]:
             self.player.move_right()
 
-    def mouse_check(self, event):
+    def mouse_check(self, event, item_list, enemy_list):
         # check if the mouse is clicked
-        if event.button == 1:
-            self.player.attack()
-        elif event.button == 3:
-            self.player.pickup()
+        for enemy in enemy_list:
+            if event.button == 1:
+                self.player.attack(enemy)
+
+        for item in item_list:
+            if event.button == 3:
+                self.player.pickup(item)
+                item.pickup()
 
 
-    def event_loop(self):
+    def event_loop(self, item_list, enemy_list):
         self.move()
         for event in pg.event.get():
             if event.type == QUIT:
                 pg.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN:
-                self.mouse_check(event)
+                self.mouse_check(event, item_list, enemy_list)
                 
