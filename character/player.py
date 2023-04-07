@@ -20,6 +20,7 @@ class Player(pg.sprite.Sprite):
         self.direction = 'right'
         self.attack_state = False
         self.pickup_state = False
+        self.run_state = False
 
     def setup_status(self):
         self.hp = 100
@@ -68,6 +69,14 @@ class Player(pg.sprite.Sprite):
 
         # wait for 0.5 second
         self.pickup_state = False
+
+    def run(self):
+        if self.run_state == False:
+            self.speed *= 4
+            self.running = True
+        else:
+            self.speed /= 4
+            self.run_state = False
 
 if __name__ == '__main__':
     print('This is a module for player class. Please run main.py to start the game.')

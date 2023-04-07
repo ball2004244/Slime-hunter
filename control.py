@@ -21,6 +21,13 @@ class Control:
         if keys[K_RIGHT] or keys[K_d]:
             self.player.move_right()
 
+        # running the player
+        if keys[K_LCTRL]:
+            self.player.run_state = True
+            print(self.player.speed)
+        else:
+            self.player.run_state = False
+
     def mouse_check(self, event, item_list, enemy_list):
         # check if the mouse is clicked
         for enemy in enemy_list:
