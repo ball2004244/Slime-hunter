@@ -5,7 +5,7 @@ pg.init()
 
 # create Enemy abstract class as a sprite
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color=COLOR['black']):
         super().__init__()
         self.image = pg.Surface((width, height))
         self.image.fill(color)
@@ -48,11 +48,10 @@ class Enemy(pg.sprite.Sprite):
 
 # create Slime class as a sprite
 class Slime(Enemy):
-    def __init__(self, x, y, width, height, color):
-        super().__init__(x, y, width, height, color)
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
 
         self.setup_status()
-
         self.tag = 'enemy'
         self.name = 'slime'
 

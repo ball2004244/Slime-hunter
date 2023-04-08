@@ -13,6 +13,7 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.padding = 100
 
         self.setup_equipment()
         self.setup_status()
@@ -23,6 +24,7 @@ class Player(pg.sprite.Sprite):
         self.pickup_state = True
         self.run_state = False
 
+
     def setup_status(self):
         self.hp = 100
         self.mp = 100
@@ -31,28 +33,33 @@ class Player(pg.sprite.Sprite):
         self.default_speed = 3
         self.speed = self.default_speed
 
+
     def setup_equipment(self):
-        self.weapon = None
         self.armor = None
+        self.helmet = None
+        self.boots = None
+
+        # armor, helmet, boots
+        self.equipment_list = [self.armor, self.helmet, self.boots]
 
     # create 4 functions to move the character
     def move_up(self): 
-        if self.rect.y > 0:
+        if self.rect.y > 0 + self.padding:
             self.rect.y -= self.speed
             self.direction = 'up'
 
     def move_down(self):
-        if self.rect.y < SCREEN.get_height() - self.rect.height:
+        if self.rect.y < SCREEN.get_height() - self.rect.height - self.padding:
             self.rect.y += self.speed
             self.direction = 'down'
 
     def move_left(self):
-        if self.rect.x > 0:
+        if self.rect.x > 0 + self.padding:
             self.rect.x -= self.speed
             self.direction = 'left'
 
     def move_right(self):
-        if self.rect.x < SCREEN.get_width() - self.rect.width:
+        if self.rect.x < SCREEN.get_width() - self.rect.width - self.padding:
             self.rect.x += self.speed
             self.direction = 'right'
 
@@ -65,42 +72,59 @@ class Player(pg.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def attack(self, enemy):
+    def attack(self, enemy, weapon):
         if self.attack_state == False:
             return
 
         if self.rect.colliderect(enemy.rect):
             # print('Attack!', enemy)
+            weapon_attack_power = 0
+            if weapon:
+                if weapon.tag == 'weapon':
+                    weapon_attack_power = weapon.attack_power
+            enemy.get_damage(self.attack_power + weapon_attack_power)
 
-            enemy.get_damage(self.attack_power)
 
-
-    def pickup(self, inventory, item):
+    def pickup(self, hotbar, inventory, item):
         if self.pickup_state == False:
             return
 
         if self.rect.colliderect(item.rect):
-            # add item to inventory
-            if not inventory.add_item(item):
-                return 
-               
-            self.equip(item)         
+            inventory.add_item(item, hotbar)
 
     def get_damage(self, damage):
         if self.hp <= 0:
-            print('You are dead.')
+            print('You are dead!')
             return
         
         if damage > self.defense:
             self.hp -= (damage - self.defense)
 
     def equip(self, item):
-        if item.tag == 'weapon':
-            self.weapon = item
-            self.attack_power += item.attack_power
-        elif item.tag == 'armor':
+        if item.tag == 'armor':
             self.armor = item
-            self.defense += item.defense
+        elif item.tag == 'helmet':
+            self.helmet = item
+        elif item.tag == 'boots':
+            self.boots = item
+
+    def break_block(self, tool, block):
+        # This means the player is not holding any tool
+        if tool == None:
+            print('You need a tool to break the block.')
+            return
+        
+        # check if the tool is a pickaxe
+        if tool.tag != 'tool':
+            print('You need a pickaxe to break the block.')
+            return
+        
+        # check if there is a pickage str in the name 
+        if 'pickaxe' not in tool.name:
+            print('You need a pickaxe to break the block.')
+            return
+        
+        block.get_broken(tool)
 
 
 class StatusBar(pg.sprite.Sprite):
@@ -131,16 +155,5 @@ if __name__ == '__main__':
     print('This is a module for player class. Please run main.py to start the game.')
 
 
-class ToolBar(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height, color):
-        super().__init__()
-        self.image = pg.Surface((width, height))
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
 
 

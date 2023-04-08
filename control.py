@@ -6,9 +6,10 @@ import sys
 pg.init()
 
 class Control:
-    def __init__(self, player, inventory):
+    def __init__(self, player, inventory, hotbar):
         self.player = player
         self.inventory = inventory
+        self.hotbar = hotbar
 
     def move(self, keys):
         # moving the player
@@ -30,26 +31,30 @@ class Control:
 
         self.player.run()
 
-    def mouse_check(self, event, player_group, enemy_group, item_group):
+    def mouse_check(self, event, player_group, enemy_group, item_group, block_group):
         # check collision between player and enemy
         if event.button == 1:
             collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
             if collide_list:
                 enemy = collide_list[self.player][0]
-                self.player.attack(enemy)
+                self.player.attack(enemy, self.hotbar.current_item())
+
+        # check collision between player and block
+        if event.button == 1:
+            collide_list = pg.sprite.groupcollide(player_group, block_group, False, False)
+            if collide_list:
+                block = collide_list[self.player][0]
+                self.player.break_block(self.hotbar.current_item(), block)
 
         # check collision between player and item
         if event.button == 3:
             collide_list = pg.sprite.groupcollide(player_group, item_group, False, False)
             if collide_list:
                 item = collide_list[self.player][0]
-                self.player.pickup(self.inventory, item)
-    
-    def open_inventory(self, event):
-        if event.key == K_i:
-            self.inventory.open_inventory()        
+                self.player.pickup(self.hotbar, self.inventory, item)
+         
 
-    def event_loop(self, player_group, item_group, enemy_group):   
+    def event_loop(self, player_group, item_group, enemy_group, block_group):   
         keys = pg.key.get_pressed()
         self.move(keys)
 
@@ -59,8 +64,12 @@ class Control:
                 sys.exit()
 
             elif event.type == KEYDOWN:
-                self.open_inventory(event)
+                if event.key == K_i:
+                    self.inventory.open_inventory() 
+                elif event.key in [K_1, K_2, K_3, K_4]:
+                    self.hotbar.select_slot(event.key - 48)
+
 
             elif event.type == MOUSEBUTTONDOWN:
-                self.mouse_check(event, player_group, enemy_group, item_group)
+                self.mouse_check(event, player_group, enemy_group, item_group, block_group)
                 

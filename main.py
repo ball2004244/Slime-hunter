@@ -18,14 +18,15 @@ while True:
     player_group.draw(SCREEN)
     enemy_group.draw(SCREEN)
     item_group.draw(SCREEN)
+    block_group.draw(SCREEN)
 
     # show status
     status_bar.show_status(SCREEN, player)
-    tool_bar.draw(SCREEN)
+    hotbar.draw(SCREEN)
     show_hp(SCREEN)
 
     # process the user keyboard + mouse input
-    control.event_loop(player_group, item_group, enemy_group)            
+    control.event_loop(player_group, item_group, enemy_group, block_group)            
 
     fps_clock.display_fps(SCREEN)
     pg.display.update()
