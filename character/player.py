@@ -1,6 +1,6 @@
 import pygame as pg 
 from pygame.locals import *
-from setup import SCREEN
+from setup import SCREEN, COLOR
 
 pg.init()
 
@@ -14,12 +14,13 @@ class Player(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        self.setup_equipment()
         self.setup_status()
 
         # direction: ['up', 'down', 'left', 'right']
         self.direction = 'right'
-        self.attack_state = False
-        self.pickup_state = False
+        self.attack_state = True
+        self.pickup_state = True
         self.run_state = False
 
     def setup_status(self):
@@ -27,7 +28,12 @@ class Player(pg.sprite.Sprite):
         self.mp = 100
         self.attack_power = 10
         self.defense = 10
-        self.speed = 3
+        self.default_speed = 3
+        self.speed = self.default_speed
+
+    def setup_equipment(self):
+        self.weapon = None
+        self.armor = None
 
     # create 4 functions to move the character
     def move_up(self): 
@@ -50,33 +56,91 @@ class Player(pg.sprite.Sprite):
             self.rect.x += self.speed
             self.direction = 'right'
 
+    def run(self):
+        if self.run_state == True:
+            self.speed = self.default_speed * 2
+        else:
+            self.speed = self.default_speed
+
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def attack(self, enemy):
-        self.attack_state = True
+        if self.attack_state == False:
+            return
+
         if self.rect.colliderect(enemy.rect):
-            print('Attack!', enemy)
+            # print('Attack!', enemy)
 
-        # wait for 0.5 second
-        self.attack_state = False
+            enemy.get_damage(self.attack_power)
 
-    def pickup(self, item):
-        self.pickup_state = True
+
+    def pickup(self, inventory, item):
+        if self.pickup_state == False:
+            return
 
         if self.rect.colliderect(item.rect):
-            print('Pick up!', item)
+            # add item to inventory
+            if not inventory.add_item(item):
+                return 
+               
+            self.equip(item)         
 
-        # wait for 0.5 second
-        self.pickup_state = False
+    def get_damage(self, damage):
+        if self.hp <= 0:
+            print('You are dead.')
+            return
+        
+        if damage > self.defense:
+            self.hp -= (damage - self.defense)
 
-    def run(self):
-        if self.run_state == False:
-            self.speed *= 4
-            self.running = True
-        else:
-            self.speed /= 4
-            self.run_state = False
+    def equip(self, item):
+        if item.tag == 'weapon':
+            self.weapon = item
+            self.attack_power += item.attack_power
+        elif item.tag == 'armor':
+            self.armor = item
+            self.defense += item.defense
+
+
+class StatusBar(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height, color):
+        super().__init__()
+        self.image = pg.Surface((width, height))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+    def show_hp(self, screen, player):
+        # show hp on top of the slime, color: red
+        pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y, player.hp * 2, 10))
+
+    def show_mp(self, screen, player):
+        # show hp on top of the slime, color: red
+        pg.draw.rect(screen, COLOR['blue'], (self.rect.x, self.rect.y + 20, player.mp * 2, 10))
+    
+    def show_status(self, screen, player):
+        self.show_hp(screen, player)
+        self.show_mp(screen, player)
 
 if __name__ == '__main__':
     print('This is a module for player class. Please run main.py to start the game.')
+
+
+class ToolBar(pg.sprite.Sprite):
+    def __init__(self, x, y, width, height, color):
+        super().__init__()
+        self.image = pg.Surface((width, height))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+
