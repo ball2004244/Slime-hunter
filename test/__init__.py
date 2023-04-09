@@ -12,11 +12,14 @@ from inventory import Inventory, InventoryUI, HotBar
 """
 from block.block import WoodBlock, StoneBlock
  """
-from camera import Camera
+from camera import Camera, Map
 
 
 MAP_HEIGHT = 1080
 MAP_WIDTH = 1920
+
+# create a map
+_map = Map(0, 0, MAP_WIDTH, MAP_HEIGHT)
 
 """ # create enemies
 slime1 = Slime(200, 200, 80, 80)
@@ -40,7 +43,6 @@ player = Player(400, 400, 70, 70, COLOR['green'])
 inventory = Inventory(10)
 status_bar = StatusBar(30, 30, 200, 50, COLOR['black'])
 hotbar = HotBar(SCREEN.get_width() / 2 - 200, SCREEN.get_height() - 60, 400, 50, COLOR['black'])
-camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
 control = Control(player, inventory, hotbar)
 
 """ # create lists
@@ -69,3 +71,7 @@ for block in block_list:
 def show_hp(screen):
     # show hp on top of the slime, color: red
     slime1.show_hp(screen) """
+
+# define camera
+camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
+

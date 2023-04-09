@@ -5,6 +5,10 @@
 # main.py
 # __init__.py
 # map/map.py
+import pygame as pg
+from pygame.locals import *
+
+pg.init()
 
 class Camera:
     def __init__(self, player, screen_width, screen_height, map_width, map_height):
@@ -21,102 +25,57 @@ class Camera:
         self.padding_right = self.screen_width - self.padding
         self.padding_bottom = self.screen_height - self.padding
 
-        self.speed = player.default_speed
+        self.speed = self.player.default_speed
 
-        self.horizontal_transition = False
-        self.vertical_transition = False
 
-        
-    def transition(self):
-        if self.player.rect.x <= self.padding_left:
-            self.horizontal_transition = True
-        elif self.player.rect.x >= self.padding_right:
-            self.horizontal_transition = True
-        else:
-            self.horizontal_transition = False
-
+    def move_top(self, _map):
         if self.player.rect.y <= self.padding_top:
-            self.vertical_transition = True
-        elif self.player.rect.y >= self.padding_bottom:
-            self.vertical_transition = True
-        else:
-            self.vertical_transition = False
-
-    def update(self):
-        # Move the camera if the player is close to the edge of the screen
-        print(self.player.rect.x, self.player.rect.y)
-        touching_padding = False
-        if self.player.rect.x <= self.padding_left:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-        elif self.player.rect.x >= self.padding_right:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-       
-        if self.player.rect.y <= self.padding_top:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-        elif self.player.rect.y >= self.padding_bottom:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
+            self.player.top_transition = True
+            _map.y += self.speed
+            return
         
-        if not touching_padding:
-            self.player.speed = 3
-            
+        self.player.top_transition = False
 
-
-    def apply(self, rect):
-        # Shift the rectangle by the camera position
-        return rect.move(-self.x, -self.y)
-
-# rewrite the Camera class so that
-# the camera will move if the user touch the padding
-# and if the user is not touching the padding
-
-class Camera:
-    def __init__(self, player, screen_width, screen_height, map_width, map_height):
-        self.player = player
-        self.screen_width = screen_width
-        self.screen_height = screen_height
-        self.map_width = map_width
-        self.map_height = map_height
-        self.padding = 100
-        self.padding_top = self.padding
-        self.padding_left = self.padding
-        self.padding_right = self.screen_width - self.padding
-        self.padding_bottom = self.screen_height - self.padding
-
-    def update(self):
-        # Move the camera if the player is close to the edge of the screen
-        print(self.player.rect.x, self.player.rect.y)
-        touching_padding = False
-        if self.player.rect.x <= self.padding_left:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-        elif self.player.rect.x >= self.padding_right:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-       
-        if self.player.rect.y <= self.padding_top:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
-        elif self.player.rect.y >= self.padding_bottom:
-            self.speed = self.player.speed
-            self.player.speed = 0
-            touching_padding = True
+    def move_bottom(self, _map):
+        if self.player.rect.y >= self.padding_bottom:
+            self.player.bottom_transition = True
+            _map.y -= self.speed
+            return
         
-        if not touching_padding:
-            self.player.speed = 3
-            
+        self.player.bottom_transition = False
 
+    def move_left(self, _map):
+        if self.player.rect.x <= self.padding_left:
+            self.player.left_transition = True
+            _map.x += self.speed
+            return
+        
+        self.player.left_transition = False
 
-    def apply(self, rect):
-        # Shift the rectangle by the camera position
-        return rect.move(-self.x, -self.y)
+    def move_right(self, _map):
+        if self.player.rect.x >= self.padding_right:
+            self.player.right_transition = True
+            _map.x -= self.speed
+            return
+        
+        self.player.right_transition = False
+
+    def transition(self, _map):
+        self.speed = self.player.speed
+        self.move_top(_map)
+        self.move_bottom(_map)
+        self.move_left(_map)
+        self.move_right(_map)
+class Map:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+        # import image
+        self.image = pg.image.load('background.jpg')
+        self.image = pg.transform.scale(self.image, (self.width, self.height))
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
