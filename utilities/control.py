@@ -38,8 +38,7 @@ class Control:
             if collide_list:
                 enemy = collide_list[self.player][0]
 
-                if self.player.attack_state:
-                    self.player.attack(enemy, self.hotbar.current_item(), self.inventory)
+                self.player.attack(enemy, self.hotbar.current_item(), self.inventory)
 
         # check collision between player and block
         if event.button == 1:
@@ -80,4 +79,3 @@ class Control:
 
             elif event.type == MOUSEBUTTONDOWN:
                 self.mouse_check(event, player_group, enemy_group, item_group, block_group)
-                

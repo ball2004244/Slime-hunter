@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame.locals import *
 from setup import SCREEN, COLOR
+import random
 pg.init()
 
 # create Enemy abstract class as a sprite
@@ -22,7 +23,10 @@ class Enemy(pg.sprite.Sprite):
         self.tag = 'enemy'
         self.name = 'enemy'
 
-        self.attack_state = True
+        self.direction = 'right'
+
+        self.attack_timer = pg.time.get_ticks()
+        self.move_timer = pg.time.get_ticks()
 
 
     def setup_status(self):
@@ -32,11 +36,15 @@ class Enemy(pg.sprite.Sprite):
         self.attack_power = 1
         self.defense = 5
         self.default_speed = 3
+        self.speed = self.default_speed
 
     def attack(self, player):
-        if self.attack_state:
-            player.get_damage(self.attack_power)
-            self.attack_state = False
+        current_time = pg.time.get_ticks()
+        if current_time - self.attack_timer < 1000:
+            return
+    
+        player.get_damage(self.attack_power)
+        self.attack_timer = current_time
         
     
     def get_damage(self, damage, inventory):
@@ -59,7 +67,43 @@ class Enemy(pg.sprite.Sprite):
         self.drop(inventory)
         self.kill()
 
-    
+    def random_movement(self, move, camera):
+        current_time = pg.time.get_ticks()
+        if current_time - self.move_timer < 3000:
+            return
+
+        '''
+        Random movement algorithm:
+        1. generate a random direction (8 directions)
+        2. generate a random number of steps
+        3. move the enemy in that direction for a number of steps
+        
+        '''
+        # generate a random direction
+        direction_list = [('up', 1), ('down', -1), ('left', 1), ('right', -1)]
+        
+        direction1 = random.choice(direction_list)
+        direction2 = random.choice(direction_list)
+
+        # prevent the case left-right or up-down
+        # prevent the repeat case 
+        while direction1[0] == direction2[0] or direction1[1] == direction2[1]:
+            direction2 = random.choice(direction_list)
+
+        # move the enemy in that direction for a number of steps
+        step1 = random.randint(30, 60)
+        step2 = random.randint(30, 60)
+
+        for i in range(step1):
+            move(self, direction1[0], self.speed, camera)
+
+        for i in range(step2):
+            move(self, direction2[0], self.speed, camera)
+
+        # reset the timer 
+        self.move_timer = current_time
+
+
 # create Slime class as a sprite
 class Slime(Enemy):
     def __init__(self, x, y, width, height, color, resource):
@@ -70,6 +114,7 @@ class Slime(Enemy):
         self.name = 'slime'
 
     def setup_status(self):
+        super().setup_status()
         self.max_hp = 10
         self.hp = self.max_hp
         self.mp = 0

@@ -20,9 +20,12 @@ class Player(pg.sprite.Sprite):
 
         # direction: ['up', 'down', 'left', 'right']
         self.direction = 'right'
-        self.attack_state = True
         self.pickup_state = True
         self.run_state = False
+        self.moving = True
+        self.alive = True
+
+        self.attack_timer = pg.time.get_ticks()
 
 
     def setup_status(self):
@@ -45,26 +48,41 @@ class Player(pg.sprite.Sprite):
 
     # create 4 functions to move the character
     def move_up(self): 
+        if not self.moving:
+            return
+        
         if self.rect.y > 0 + self.padding:
             self.rect.y -= self.speed
             self.direction = 'up'
 
     def move_down(self):
+        if not self.moving:
+            return
+
         if self.rect.y < SCREEN.get_height() - self.rect.height - self.padding:
             self.rect.y += self.speed
             self.direction = 'down'
 
     def move_left(self):
+        if not self.moving:
+            return
+
         if self.rect.x > 0 + self.padding:
             self.rect.x -= self.speed
             self.direction = 'left'
 
     def move_right(self):
+        if not self.moving:
+            return
+
         if self.rect.x < SCREEN.get_width() - self.rect.width - self.padding:
             self.rect.x += self.speed
             self.direction = 'right'
 
     def run(self):
+        if not self.alive:
+            return
+        
         if self.run_state == True:
             self.speed = self.default_speed * 2
         else:
@@ -74,17 +92,18 @@ class Player(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def attack(self, enemy, weapon, inventory):
-        if self.attack_state == False:
+        current_time = pg.time.get_ticks()
+        if current_time - self.attack_timer < 500:
             return
 
-        if self.rect.colliderect(enemy.rect):
-            # print('Attack!', enemy)
-            weapon_attack_power = 0
-            if weapon:
-                if weapon.tag == 'weapon':
-                    weapon_attack_power = weapon.attack_power
-            enemy.get_damage(self.attack_power + weapon_attack_power, inventory)
+        # print('Attack!', enemy)
+        weapon_attack_power = 0
+        if weapon:
+            if weapon.tag == 'weapon':
+                weapon_attack_power = weapon.attack_power
 
+        enemy.get_damage(self.attack_power + weapon_attack_power, inventory)
+        self.attack_timer = current_time
 
     def pickup(self, inventory, item):
         if self.pickup_state == False:
@@ -93,13 +112,15 @@ class Player(pg.sprite.Sprite):
         if self.rect.colliderect(item.rect):
             inventory.add_item(item)
 
-    def get_damage(self, damage):
-        if self.hp <= 0:
-            self.die()
+    def get_damage(self, damage):    
+        if not self.alive:
             return
         
         if damage > self.defense:
             self.hp -= (damage - self.defense)
+
+        if self.hp <= 0:
+            self.die()
 
     def equip(self, item):
         if item.tag == 'armor':
@@ -128,7 +149,8 @@ class Player(pg.sprite.Sprite):
         block.get_broken(tool, inventory)
 
     def die(self):
-        # print('You are dead!')
+        print('You are dead!')
+        self.alive = False
         self.speed = 0
 
 

@@ -10,6 +10,7 @@ class Inventory:
         self.item_map = {}
         self.item_group = pg.sprite.Group()
         self.hotbar = hotbar 
+        self.open = False
 
     def add_item(self, item): 
         # the format of 1 slot in the inventory is {item_name: number_of_item}
@@ -67,31 +68,17 @@ class Inventory:
         print(f'Hotbar: {self.hotbar.hotbar_items}')
         print(f'Inventory: {self.item_map}')
 
-
-
-class InventoryUI:
-    def __init__(self, inventory):
-        self.inventory = inventory
-        self.item_group = inventory.item_group
-        self.item_map = inventory.item_map
-        self.item_list = []
-
-        self.item_font = pg.font.SysFont('Arial', 20)
-        self.item_font_color = (0, 0, 0)
-        self.item_font_bg = (255, 255, 255)
-
+    def toggle_inventory(self):
+        if self.open:
+            self.open = False
+            print('Inventory closed')
+        else:
+            self.open = True
+            print('Inventory opened')
+            
     def draw(self, screen):
-        self.item_list = []
-        for item in self.item_group:
-            self.item_list.append(item)
-        
-        for i in range(len(self.item_list)):
-            item = self.item_list[i]
-            item_text = self.item_font.render(item.name, True, self.item_font_color, self.item_font_bg)
-            item_text_rect = item_text.get_rect()
-            item_text_rect.x = 10
-            item_text_rect.y = 10 + i * 30
-            screen.blit(item_text, item_text_rect)
+        self.hotbar.draw(screen)
+        self.item_group.draw(screen)
 
 
 class HotBar(pg.sprite.Sprite):

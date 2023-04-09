@@ -24,6 +24,8 @@ while True:
     hotbar.draw(SCREEN)
     show_hp(SCREEN)
 
+    slime1.random_movement(movement, camera)
+
     # process the user keyboard + mouse input
     control.event_loop(player_group, item_group, enemy_group, block_group)            
 

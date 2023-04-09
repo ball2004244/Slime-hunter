@@ -1,6 +1,5 @@
 import pygame as pg
 from setup import COLOR, SCREEN
-from control import Control
 from character.player import Player, StatusBar
 from character.enemy import Slime
 from item.food import Apple
@@ -8,9 +7,15 @@ from item.weapon import Sword
 from item.armor import LeatherArmor
 from item.tool import WoodenPickaxe
 from item.resource import Wood, Stone, Coin
-from inventory import Inventory, InventoryUI, HotBar
 from block.block import WoodBlock, StoneBlock
+from utilities.control import Control
+from utilities.camera import Camera
+from utilities.inventory import Inventory, HotBar
+from utilities.helper import movement
 # from state.gameplay import Gameplay
+
+MAP_WIDTH = 1920
+MAP_HEIGHT = 1080
 
 # create pickable items
 apple = Apple(300, 300, 30, 30, COLOR['red'])
@@ -33,8 +38,9 @@ slime1 = Slime(100, 100, 50, 50, COLOR['black'], coin)
 
 
 # define player
-player = Player(100, 100, 70, 70, COLOR['green'])
-hotbar = HotBar(SCREEN.get_width() / 2 - 200, SCREEN.get_height() - 60, 400, 50, COLOR['black'])
+player = Player(700, 500, 70, 70, COLOR['green'])
+hotbar = HotBar(SCREEN.get_width() / 2 - 200,
+                SCREEN.get_height() - 60, 400, 50, COLOR['black'])
 inventory = Inventory(10, hotbar)
 status_bar = StatusBar(30, 30, 200, 50, COLOR['black'])
 
@@ -64,10 +70,16 @@ for block in block_list:
     block_group.add(block)
 
 # show hp on top of the enemies
+
+
 def show_hp(screen):
     status_bar.show_status(SCREEN, player)
     slime1.show_hp(screen)
 
+
+# create a game camera
+camera = Camera(player, SCREEN.get_width(),
+                SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
 
 # create gameplay state
 # gameplay = Gameplay(player_group, enemy_group)
