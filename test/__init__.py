@@ -1,16 +1,26 @@
 import pygame as pg
 from setup import COLOR, SCREEN
 from control import Control
-from character.player import Player, StatusBar
-from character.enemy import Slime
+from player import Player, StatusBar
+""" from character.enemy import Slime
 from item.food import Apple
 from item.weapon import Sword
 from item.armor import LeatherArmor
 from item.tool import WoodenPickaxe
-from item.resource import Wood, Stone, Coin
-from inventory import Inventory, InventoryUI, HotBar
+""" 
+from inventory import Inventory, InventoryUI, HotBar 
+"""
 from block.block import WoodBlock, StoneBlock
-# from state.gameplay import Gameplay
+ """
+from camera import Camera
+
+
+MAP_HEIGHT = 1080
+MAP_WIDTH = 1920
+
+""" # create enemies
+slime1 = Slime(200, 200, 80, 80)
+
 
 # create pickable items
 apple = Apple(300, 300, 30, 30, COLOR['red'])
@@ -19,31 +29,24 @@ sword = Sword(500, 500, 30, 30, COLOR['blue'])
 leather_armor = LeatherArmor(600, 600, 60, 60, COLOR['light_brown'])
 wooden_pickaxe = WoodenPickaxe(700, 700, 30, 30, COLOR['purple'])
 
-# define items
-wood = Wood(0, 0, 30, 30)
-stone = Stone(0, 0, 30, 30)
-coin = Coin(0, 0, 30, 30)
 
 # create blocks
-wood_block = WoodBlock(100, 650, 50, 50, COLOR['brown'], wood)
-stone_block = StoneBlock(200, 650, 50, 50, COLOR['gray'], stone)
-
-# create enemies
-slime1 = Slime(100, 100, 50, 50, COLOR['black'], coin)
+wood_block = WoodBlock(100, 650, 50, 50, COLOR['brown'])
+stone_block = StoneBlock(200, 650, 50, 50, COLOR['gray']) """
 
 
 # define player
-player = Player(100, 100, 70, 70, COLOR['green'])
-hotbar = HotBar(SCREEN.get_width() / 2 - 200, SCREEN.get_height() - 60, 400, 50, COLOR['black'])
-inventory = Inventory(10, hotbar)
+player = Player(400, 400, 70, 70, COLOR['green'])
+inventory = Inventory(10)
 status_bar = StatusBar(30, 30, 200, 50, COLOR['black'])
-
+hotbar = HotBar(SCREEN.get_width() / 2 - 200, SCREEN.get_height() - 60, 400, 50, COLOR['black'])
+camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
 control = Control(player, inventory, hotbar)
 
-# create lists
+""" # create lists
 item_list = [apple, apple2, sword, leather_armor, wooden_pickaxe]
 enemy_list = [slime1]
-block_list = [wood_block, stone_block]
+block_list = [wood_block, stone_block] """
 
 # create pygame sprite groups
 item_group = pg.sprite.Group()
@@ -54,7 +57,7 @@ block_group = pg.sprite.Group()
 # add sprites to groups
 player_group.add(player)
 
-for item in item_list:
+""" for item in item_list:
     item_group.add(item)
 
 for enemy in enemy_list:
@@ -63,13 +66,6 @@ for enemy in enemy_list:
 for block in block_list:
     block_group.add(block)
 
-# show hp on top of the enemies
 def show_hp(screen):
-    status_bar.show_status(SCREEN, player)
-    slime1.show_hp(screen)
-
-
-# create gameplay state
-# gameplay = Gameplay(player_group, enemy_group)
-# gameplay.set_inventory(inventory)
-# gameplay.set_hotbar(hotbar)
+    # show hp on top of the slime, color: red
+    slime1.show_hp(screen) """

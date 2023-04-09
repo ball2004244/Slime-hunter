@@ -4,14 +4,13 @@ from pygame.locals import *
 pg.init()
 
 class Inventory:
-    def __init__(self, capacity, hotbar):
+    def __init__(self, capacity):
         self.capacity = capacity
         self.stack_capacity = 16
         self.item_map = {}
         self.item_group = pg.sprite.Group()
-        self.hotbar = hotbar 
 
-    def add_item(self, item): 
+    def add_item(self, item, hotbar): 
         # the format of 1 slot in the inventory is {item_name: number_of_item}
         '''
         There are 4 cases:
@@ -19,17 +18,10 @@ class Inventory:
         2. The inventory is full
         3. The item stack is full
         4. The hotbar is not full
-
-        The item will fill up the hotbar first, then the inventory
         '''
 
-        if self.hotbar.contain(item):
-            self.hotbar.add_item(item)
-            return
-        
-        if not self.hotbar.is_full():
-            self.hotbar.add_item(item)
-            return
+        # case 4
+        hotbar.add_item(item)
 
 
         if not item.name in self.item_map:
@@ -48,7 +40,7 @@ class Inventory:
             self.item_map[item.name] += 1
 
         item.pickup()
-        # print('Pick up', item.name.capitalize())
+        print('Pick up', item.name.capitalize())
         return 
 
     def remove_item(self, item):
@@ -64,8 +56,7 @@ class Inventory:
             return self.item_map[item_name]
         
     def open_inventory(self):
-        print(f'Hotbar: {self.hotbar.hotbar_items}')
-        print(f'Inventory: {self.item_map}')
+        print(self.item_map)
 
 
 
@@ -94,6 +85,12 @@ class InventoryUI:
             screen.blit(item_text, item_text_rect)
 
 
+
+# create a UI for the hotbar
+# currently showing a black bar
+# I want to replace the black bar with a list of boxes
+# each box contains the name of the item and the number of the item
+# each box will be a gray rectangle
 class HotBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()
@@ -114,65 +111,48 @@ class HotBar(pg.sprite.Sprite):
 
         # set up the hotbar algorithm
         self.current_slot = 0
+        self.empty_slot = None
         self.hotbar_length = 4
 
         # hotbar_slots link the keyboard's input with the item
-        # self.hotbar_slots = {keyboard_input: item}
         self.hotbar_slots = {0: None, 1: None, 2: None, 3: None}
 
         # hotbar_items link the item with the quantity
-        # self.hotbar_items = {item: quantity}
-        self.hotbar_items = {}
+        self.hotbar_items = {None: 0, None: 0, None: 0, None: 0}
 
     def current_item(self):
         return self.hotbar_slots[self.current_slot]
 
-    # rewrite this function 
-    # it is taking the input from the keyboard
-    # and check what is inside the current slot
-
     def select_slot(self, slot):
         self.current_slot = slot - 1
-        # if self.current_item() != None:
-        #     print(self.current_item().name)
-        # else:
-        #     print('Empty slot')
-
-    def is_full(self):
-        if None not in self.hotbar_slots.values():
-            # print('Hotbar is full!')
-            return True
+        if self.current_item() != None:
+            print(self.current_item().name)
         else:
-            return False
-    
+            print('Empty slot')
+
     def add_item(self, item):
         # check if the item already exists in the hotbar
         # if it does, increase the quantity
         if item.name in self.hotbar_items:
             self.hotbar_items[item.name] += 1
-            item.pickup()
             return
 
         # check if the hotbar is full
-        if self.is_full():
+        if None not in self.hotbar_slots.values():
+            print('Hotbar is full!')
             return
         
         # if the hotbar is not full, find an empty slot
         # and add the item to the hotbar
-    
+        self.empty_slot = None
         for i in range(self.hotbar_length):
             if self.hotbar_slots[i] == None:
-                self.hotbar_slots[i] = item
-                self.hotbar_items[item.name] = 1
-                item.pickup()
+                self.empty_slot = i
                 break
-
-    def contain(self, item):
-        if item.name in self.hotbar_items:
-            return True
-        else:
-            return False
         
+        self.hotbar_slots[self.empty_slot] = item
+        self.hotbar_items[item.name] = 1
+
     def draw(self, screen):
         box_x = self.rect.x
         box_y = self.rect.y

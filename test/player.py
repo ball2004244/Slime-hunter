@@ -13,7 +13,7 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.padding = 100
+        
 
         self.setup_equipment()
         self.setup_status()
@@ -26,8 +26,7 @@ class Player(pg.sprite.Sprite):
 
 
     def setup_status(self):
-        self.max_hp = 100
-        self.hp = self.max_hp
+        self.hp = 100
         self.mp = 100
         self.attack_power = 10
         self.defense = 10
@@ -45,22 +44,22 @@ class Player(pg.sprite.Sprite):
 
     # create 4 functions to move the character
     def move_up(self): 
-        if self.rect.y > 0 + self.padding:
+        if self.rect.y > 0:
             self.rect.y -= self.speed
             self.direction = 'up'
 
     def move_down(self):
-        if self.rect.y < SCREEN.get_height() - self.rect.height - self.padding:
+        if self.rect.y < SCREEN.get_height() - self.rect.height:
             self.rect.y += self.speed
             self.direction = 'down'
 
     def move_left(self):
-        if self.rect.x > 0 + self.padding:
+        if self.rect.x > 0:
             self.rect.x -= self.speed
             self.direction = 'left'
 
     def move_right(self):
-        if self.rect.x < SCREEN.get_width() - self.rect.width - self.padding:
+        if self.rect.x < SCREEN.get_width() - self.rect.width:
             self.rect.x += self.speed
             self.direction = 'right'
 
@@ -73,7 +72,7 @@ class Player(pg.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def attack(self, enemy, weapon, inventory):
+    def attack(self, enemy, weapon):
         if self.attack_state == False:
             return
 
@@ -83,19 +82,19 @@ class Player(pg.sprite.Sprite):
             if weapon:
                 if weapon.tag == 'weapon':
                     weapon_attack_power = weapon.attack_power
-            enemy.get_damage(self.attack_power + weapon_attack_power, inventory)
+            enemy.get_damage(self.attack_power + weapon_attack_power)
 
 
-    def pickup(self, inventory, item):
+    def pickup(self, hotbar, inventory, item):
         if self.pickup_state == False:
             return
 
         if self.rect.colliderect(item.rect):
-            inventory.add_item(item)
+            inventory.add_item(item, hotbar)
 
     def get_damage(self, damage):
         if self.hp <= 0:
-            self.die()
+            print('You are dead!')
             return
         
         if damage > self.defense:
@@ -109,7 +108,7 @@ class Player(pg.sprite.Sprite):
         elif item.tag == 'boots':
             self.boots = item
 
-    def break_block(self, tool, block, inventory):
+    def break_block(self, tool, block):
         # This means the player is not holding any tool
         if tool == None:
             print('You need a tool to break the block.')
@@ -125,11 +124,7 @@ class Player(pg.sprite.Sprite):
             print('You need a pickaxe to break the block.')
             return
         
-        block.get_broken(tool, inventory)
-
-    def die(self):
-        # print('You are dead!')
-        self.speed = 0
+        block.get_broken(tool)
 
 
 class StatusBar(pg.sprite.Sprite):
@@ -140,16 +135,13 @@ class StatusBar(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.width = width
-        self.height = height
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def show_hp(self, screen, player):
         # show hp on top of the slime, color: red
-        # draw a rect similar to enemy hp bar
-        pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y, player.hp / player.max_hp * self.width, 10))
+        pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y, player.hp * 2, 10))
 
     def show_mp(self, screen, player):
         # show hp on top of the slime, color: red

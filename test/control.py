@@ -37,32 +37,24 @@ class Control:
             collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
             if collide_list:
                 enemy = collide_list[self.player][0]
-
-                if self.player.attack_state:
-                    self.player.attack(enemy, self.hotbar.current_item(), self.inventory)
+                self.player.attack(enemy, self.hotbar.current_item())
 
         # check collision between player and block
         if event.button == 1:
             collide_list = pg.sprite.groupcollide(player_group, block_group, False, False)
             if collide_list:
                 block = collide_list[self.player][0]
-                self.player.break_block(self.hotbar.current_item(), block, self.inventory)
+                self.player.break_block(self.hotbar.current_item(), block)
 
         # check collision between player and item
         if event.button == 3:
             collide_list = pg.sprite.groupcollide(player_group, item_group, False, False)
             if collide_list:
                 item = collide_list[self.player][0]
-                self.player.pickup(self.inventory, item)
+                self.player.pickup(self.hotbar, self.inventory, item)
          
 
     def event_loop(self, player_group, item_group, enemy_group, block_group):   
-        collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
-        if collide_list:
-            enemy = collide_list[self.player][0]
-
-            enemy.attack(self.player)
-
         keys = pg.key.get_pressed()
         self.move(keys)
 
