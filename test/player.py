@@ -164,7 +164,13 @@ class Player(pg.sprite.Sprite):
         
         block.get_broken(tool)
 
+    @property
+    def set_position(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
+    def get_pos(self):
+        return (self.rect.x, self.rect.y)
 class StatusBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()

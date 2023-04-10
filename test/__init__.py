@@ -15,9 +15,6 @@ from block.block import WoodBlock, StoneBlock
 from camera import Camera
 from map.map import Map
 
-MAP_HEIGHT = 1080
-MAP_WIDTH = 1920
-
 # create a map
 # This is the dummy map from camera.py
 # from camera import Map
@@ -48,7 +45,6 @@ player = Player(400, 400, 70, 70, COLOR['green'])
 inventory = Inventory(10)
 status_bar = StatusBar(30, 30, 200, 50, COLOR['black'])
 hotbar = HotBar(SCREEN.get_width() / 2 - 200, SCREEN.get_height() - 60, 400, 50, COLOR['black'])
-control = Control(player, inventory, hotbar)
 
 """ # create lists
 item_list = [apple, apple2, sword, leather_armor, wooden_pickaxe]
@@ -78,5 +74,5 @@ def show_hp(screen):
     slime1.show_hp(screen) """
 
 # define camera
-camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
-
+camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), gamemap.width, gamemap.height)
+control = Control(player, inventory, hotbar, camera)

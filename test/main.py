@@ -15,12 +15,12 @@ while True:
     # fill screen with white
     SCREEN.fill(COLOR['white'])
 
-    gamemap.draw(SCREEN)
+    gamemap.render(SCREEN)
     # draw background
     player_group.draw(SCREEN)
     
-    camera.transition(gamemap)
-
+    camera.update(gamemap)
+    # print(camera.get_pos())
     """ enemy_group.draw(SCREEN)
     item_group.draw(SCREEN)
     block_group.draw(SCREEN)

@@ -6,10 +6,11 @@ import sys
 pg.init()
 
 class Control:
-    def __init__(self, player, inventory, hotbar):
+    def __init__(self, player, inventory, hotbar, camera):
         self.player = player
         self.inventory = inventory
         self.hotbar = hotbar
+        self.camera = camera
 
     def move(self, keys):
         # moving the player

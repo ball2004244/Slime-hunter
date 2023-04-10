@@ -89,7 +89,6 @@ def main():
 if __name__ == '__main__':
     main()'''
 
-# rewrite the previous code to full OOP
 import pygame as pg
 from pygame.locals import *
 import pytmx
@@ -108,9 +107,15 @@ class Map:
 
         self.image_dict = {}
         self.tile_sprites = pg.sprite.Group()
-
         self.x = 0
         self.y = 0
+        self.width = self.tmx_data.width * self.tmx_data.tilewidth
+        self.height = self.tmx_data.height * self.tmx_data.tileheight
+
+        # create a rect for the map and center it
+        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        self.rect.center = (self.width / 2, self.height / 2)
+        
         self.load_game()
 
     def load_map(self):
@@ -130,9 +135,23 @@ class Map:
         self.load_map()
         self.load_objects()
 
-    def draw(self, screen):
+    def render(self, screen):
         self.tile_sprites.draw(screen)
 
+    def update(self, x, y):
+        # validate if the map is going to be out of the screen
+        move_x = x
+        move_y = y
+        # if self.x + x < 0 or self.x + x > self.width:
+        #     move_x = 0
+
+        # if self.y + y < 0 or self.y + y > self.height:
+        #     move_y = 0
+
+        self.x += move_x
+        self.y += move_y
+        for sprite in self.tile_sprites:
+            sprite.rect.move_ip(move_x, move_y)
 if __name__ == '__main__':
     screen = pg.display.set_mode((1920, 1080))
     _map = Map(r'Slime hunter graphics/map.tmx')
