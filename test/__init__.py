@@ -12,14 +12,19 @@ from inventory import Inventory, InventoryUI, HotBar
 """
 from block.block import WoodBlock, StoneBlock
  """
-from camera import Camera, Map
-
+from camera import Camera
+from map.map import Map
 
 MAP_HEIGHT = 1080
 MAP_WIDTH = 1920
 
 # create a map
-_map = Map(0, 0, MAP_WIDTH, MAP_HEIGHT)
+# This is the dummy map from camera.py
+# from camera import Map
+# gamemap = Map(0, 0, MAP_WIDTH, MAP_HEIGHT)
+
+# This is the real map from map/map.py
+gamemap = Map(r'map/Slime hunter graphics/map.tmx')
 
 """ # create enemies
 slime1 = Slime(200, 200, 80, 80)

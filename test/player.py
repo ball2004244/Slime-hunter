@@ -13,7 +13,8 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
+        self.width = width
+        self.height = height
 
         self.setup_equipment()
         self.setup_status()

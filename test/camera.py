@@ -19,7 +19,7 @@ class Camera:
         self.map_height = map_height
 
 
-        self.padding = 100
+        self.padding = 60
         self.padding_top = self.padding
         self.padding_left = self.padding
         self.padding_right = self.screen_width - self.padding
@@ -37,7 +37,7 @@ class Camera:
         self.player.top_transition = False
 
     def move_bottom(self, _map):
-        if self.player.rect.y >= self.padding_bottom:
+        if self.player.rect.y + self.player.height >= self.padding_bottom:
             self.player.bottom_transition = True
             _map.y -= self.speed
             return
@@ -53,7 +53,7 @@ class Camera:
         self.player.left_transition = False
 
     def move_right(self, _map):
-        if self.player.rect.x >= self.padding_right:
+        if self.player.rect.x + self.player.width >= self.padding_right:
             self.player.right_transition = True
             _map.x -= self.speed
             return
@@ -66,6 +66,23 @@ class Camera:
         self.move_bottom(_map)
         self.move_left(_map)
         self.move_right(_map)
+        self.map_border(_map)
+
+    def map_border(self, _map):
+        if _map.x > 0:
+            _map.x = 0
+        if _map.y > 0:
+            _map.y = 0
+        if _map.x < self.screen_width - self.map_width:
+            _map.x = self.screen_width - self.map_width
+        if _map.y < self.screen_height - self.map_height:
+            _map.y = self.screen_height - self.map_height
+
+
+'''
+DUMMY MAP for testing
+'''
+
 class Map:
     def __init__(self, x, y, width, height):
         self.x = x
