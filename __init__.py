@@ -12,10 +12,8 @@ from utilities.control import Control
 from utilities.camera import Camera
 from utilities.inventory import Inventory, HotBar
 from utilities.helper import movement
+from map.map import Map
 # from state.gameplay import Gameplay
-
-MAP_WIDTH = 1920
-MAP_HEIGHT = 1080
 
 # create pickable items
 apple = Apple(300, 300, 30, 30, COLOR['red'])
@@ -77,11 +75,12 @@ def show_hp(screen):
     slime1.show_hp(screen)
 
 
+# create map
+gamemap = Map(r'map/Slime hunter graphics/map.tmx')
 # create a game camera
-camera = Camera(player, SCREEN.get_width(),
-                SCREEN.get_height(), MAP_WIDTH, MAP_HEIGHT)
+camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), gamemap.width, gamemap.height)
 
-# create gameplay state
+# create gpytameplay state
 # gameplay = Gameplay(player_group, enemy_group)
 # gameplay.set_inventory(inventory)
 # gameplay.set_hotbar(hotbar)

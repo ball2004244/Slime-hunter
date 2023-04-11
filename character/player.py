@@ -13,10 +13,12 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.padding = 100
+        self.width = width
+        self.height = height
 
         self.setup_equipment()
         self.setup_status()
+        self.setup_transition()
 
         # direction: ['up', 'down', 'left', 'right']
         self.direction = 'right'
@@ -46,37 +48,60 @@ class Player(pg.sprite.Sprite):
         # armor, helmet, boots
         self.equipment_list = [self.armor, self.helmet, self.boots]
 
+    def setup_transition(self):
+        self.top_transition = False
+        self.bottom_transition = False
+        self.left_transition = False
+        self.right_transition = False
+
+        self.speed_top = self.speed
+        self.speed_bottom = self.speed
+        self.speed_left = self.speed
+        self.speed_right = self.speed
+
     # create 4 functions to move the character
     def move_up(self): 
-        if not self.moving:
+        if self.top_transition:
+            self.speed_top = 0
             return
         
-        if self.rect.y > 0 + self.padding:
-            self.rect.y -= self.speed
+        self.speed_top = self.speed
+
+        if self.rect.y > 0:
+            self.rect.y -= self.speed_top
             self.direction = 'up'
 
     def move_down(self):
-        if not self.moving:
+        if self.bottom_transition:
+            self.speed_bottom = 0
             return
+        
+        self.speed_bottom = self.speed
 
-        if self.rect.y < SCREEN.get_height() - self.rect.height - self.padding:
-            self.rect.y += self.speed
+        if self.rect.y < SCREEN.get_height() - self.rect.height:
+            self.rect.y += self.speed_bottom
             self.direction = 'down'
 
     def move_left(self):
-        if not self.moving:
+        if self.left_transition:
+            self.speed_left = 0
             return
 
-        if self.rect.x > 0 + self.padding:
-            self.rect.x -= self.speed
+        self.speed_left = self.speed
+
+        if self.rect.x > 0:
+            self.rect.x -= self.speed_left
             self.direction = 'left'
 
     def move_right(self):
-        if not self.moving:
+        if self.right_transition:
+            self.speed_right = 0
             return
-
-        if self.rect.x < SCREEN.get_width() - self.rect.width - self.padding:
-            self.rect.x += self.speed
+        
+        self.speed_right = self.speed
+        
+        if self.rect.x < SCREEN.get_width() - self.rect.width:
+            self.rect.x += self.speed_right
             self.direction = 'right'
 
     def run(self):

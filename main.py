@@ -15,6 +15,8 @@ while True:
     # fill screen with white
     SCREEN.fill(COLOR['white'])
 
+    gamemap.render(SCREEN)
+
     player_group.draw(SCREEN)
     enemy_group.draw(SCREEN)
     item_group.draw(SCREEN)
@@ -29,5 +31,7 @@ while True:
     # process the user keyboard + mouse input
     control.event_loop(player_group, item_group, enemy_group, block_group)            
 
+    camera.update(gamemap)
+    
     fps_clock.display_fps(SCREEN)
     pg.display.update()

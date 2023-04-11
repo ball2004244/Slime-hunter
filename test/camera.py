@@ -1,10 +1,3 @@
-# create a camera class to follow the player
-# the camera will move if the user touch the padding
-# character/player.py
-# setup.py <-> config.cfg
-# main.py
-# __init__.py
-# map/map.py
 import pygame as pg
 from pygame.locals import *
 
@@ -129,7 +122,7 @@ DUMMY MAP for testing
 '''
 
 
-class Map:
+'''class Map:
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -142,3 +135,4 @@ class Map:
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+'''
