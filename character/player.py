@@ -13,6 +13,8 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.x = x
+        self.y = y
         self.width = width
         self.height = height
 
@@ -178,6 +180,20 @@ class Player(pg.sprite.Sprite):
         self.alive = False
         self.speed = 0
 
+    def get_save_data(self):
+        # get position first
+        save_dict = {'x': self.rect.x, 'y': self.rect.y, 'width': self.width, 'height': self.height}
+
+        return save_dict
+
+    def load_data(self, save_data):
+        self.rect.x = save_data['x']
+        self.rect.y = save_data['y']
+        self.width = save_data['width']
+        self.height = save_data['height']
+
+    def get_pos(self):
+        return self.rect.x, self.rect.y
 
 class StatusBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
@@ -205,7 +221,13 @@ class StatusBar(pg.sprite.Sprite):
     def show_status(self, screen, player):
         self.show_hp(screen, player)
         self.show_mp(screen, player)
+    
+    def get_status(self):
+        pass
 
+    def get_pos(self):
+        pass
+    
 if __name__ == '__main__':
     print('This is a module for player class. Please run main.py to start the game.')
 

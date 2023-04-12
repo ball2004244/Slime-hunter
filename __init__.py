@@ -2,16 +2,17 @@ import pygame as pg
 from setup import COLOR, SCREEN
 from character.player import Player, StatusBar
 from character.enemy import Slime
+from block.block import WoodBlock, StoneBlock
 from item.food import Apple
 from item.weapon import Sword
 from item.armor import LeatherArmor
 from item.tool import WoodenPickaxe
 from item.resource import Wood, Stone, Coin
-from block.block import WoodBlock, StoneBlock
 from utilities.control import Control
 from utilities.camera import Camera
 from utilities.inventory import Inventory, HotBar
 from utilities.helper import movement
+from save.save import save_object, load_object
 from map.map import Map
 # from state.gameplay import Gameplay
 
@@ -80,6 +81,16 @@ gamemap = Map(r'map/Slime hunter graphics/map.tmx')
 # create a game camera
 camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), gamemap.width, gamemap.height)
 
+def save_game():
+    for obj in player_group:
+        save_object(obj, 'save/player.pkl')
+
+def load_game():
+    # empty each group first 
+    player_group.empty()
+
+    load_object(player, 'save/player.pkl')
+    player_group.add(player)
 # create gpytameplay state
 # gameplay = Gameplay(player_group, enemy_group)
 # gameplay.set_inventory(inventory)

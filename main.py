@@ -10,6 +10,8 @@ pg.init()
 window_setup()
 fps_clock = FPS_clock()
 
+load_game()
+
 # main game loop
 while True:
     # fill screen with white
@@ -32,6 +34,8 @@ while True:
     control.event_loop(player_group, item_group, enemy_group, block_group)            
 
     camera.update(gamemap)
+    
+    save_game()
     
     fps_clock.display_fps(SCREEN)
     pg.display.update()
