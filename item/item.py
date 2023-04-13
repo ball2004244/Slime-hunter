@@ -7,7 +7,7 @@ pg.init()
 
 
 class Item(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color='black'):
         super().__init__()
         self.image = pg.Surface((width, height))
         self.image.fill(color)
@@ -18,7 +18,7 @@ class Item(pg.sprite.Sprite):
         self.height = height
         self.pickup_state = True
 
-        self.color = color
+        self.color = 'black'
 
         self.tag = 'item'
         self.name = 'item'

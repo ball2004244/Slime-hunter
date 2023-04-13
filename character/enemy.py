@@ -136,3 +136,12 @@ class Slime(Enemy):
         self.attack_power = 50
         self.defense = 5
         self.default_speed = 3
+
+    def __str__(self):
+        return f'I am {self.name}'
+
+    def get_pos(self):
+        return self.rect.x, self.rect.y
+    
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

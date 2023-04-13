@@ -1,6 +1,5 @@
 import pygame as pg
 from pygame.locals import *
-from setup import COLOR
 pg.init()
 
 class Inventory:
@@ -202,7 +201,7 @@ class HotBar(pg.sprite.Sprite):
         save_data = data_dict['hotbar_slots']
         for data in save_data:
             if data != None:
-                item = item_dict[data['name']](0, 0, 0, 0, COLOR[data['color']])
+                item = item_dict[data['name']](0, 0, 0, 0, data['color'])
                 item.load_data(data)
                 self.hotbar_slots[save_data.index(data)] = item
             else:

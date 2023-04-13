@@ -1,5 +1,6 @@
 import pygame as pg
-from setup import COLOR, SCREEN
+import random
+from setup import COLOR, SCREEN, FPS_clock, window_setup
 from character.player import Player, StatusBar
 from character.enemy import Slime
 from block.block import WoodBlock, StoneBlock
@@ -14,7 +15,12 @@ from utilities.inventory import Inventory, HotBar
 from utilities.helper import movement
 from save.save import save_object, load_object, reset_file, save_to_file, load_from_file
 from map.map import Map
-# from state.gameplay import Gameplay
+from state.gameplay import Gameplay
+
+# set up windows
+window_setup()
+# create clock
+fps_clock = FPS_clock()
 
 # create pickable items
 apple = Apple(300, 300, 30, 30, COLOR['red'])
@@ -80,7 +86,8 @@ item_dict = {
     'apple': Apple,
     'sword': Sword,
     'leather_armor': LeatherArmor,
-    'wooden_pickaxe': WoodenPickaxe
+    'wooden_pickaxe': WoodenPickaxe,
+    'coin': Coin
 }
 
 
@@ -162,7 +169,20 @@ def show_hp(screen):
     for enemy in enemy_group:
         enemy.show_hp(screen)
 
-# create gameplay state
-# gameplay = Gameplay(player_group, enemy_group)
-# gameplay.set_inventory(inventory)
-# gameplay.set_hotbar(hotbar)
+# create random number at random position
+def create_enemies():
+    num_enemies = random.randint(5, 10)
+    for i in range(num_enemies):
+        x = random.randint(0, gamemap.width)
+        y = random.randint(0, gamemap.height)
+        enemy = Slime(x, y, 50, 50, COLOR['black'], coin)
+        enemy_group.add(enemy)
+
+gameplay = Gameplay(SCREEN)
+gameplay.setup_map(gamemap)
+gameplay.setup_entity_group(player_group, item_group, enemy_group, block_group)
+gameplay.setup_inventory(inventory, hotbar)
+gameplay.setup_utilities(camera, control, save_game, fps_clock)
+gameplay.setup_status(status_bar)
+# create_enemies()
+gameplay.create_enemy(Slime, COLOR['green'], coin)

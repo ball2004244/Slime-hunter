@@ -1,44 +1,37 @@
-import pygame as pg
-from pygame.locals import *
-from setup import SCREEN, COLOR, window_setup, FPS_clock
 from __init__ import *
 
-# create a simple pygame window
-pg.init()
+# load_game()
 
-# set up the window
-window_setup()
-fps_clock = FPS_clock()
-
-load_game()
-
-auto_save = pg.time.get_ticks()
-# main game loop
 while True:
-    # fill screen with white
-    SCREEN.fill(COLOR['white'])
+    gameplay.game_loop()
 
-    gamemap.render(SCREEN)
+# main game loop
+# while True:
+#     # fill screen with white
+#     SCREEN.fill(COLOR['white'])
 
-    player_group.draw(SCREEN)
-    enemy_group.draw(SCREEN)
-    item_group.draw(SCREEN)
-    block_group.draw(SCREEN)
+#     gamemap.render(SCREEN)
 
-    # show status
-    hotbar.draw(SCREEN)
-    show_hp(SCREEN)
+#     player_group.draw(SCREEN)
+#     enemy_group.draw(SCREEN)
+#     item_group.draw(SCREEN)
+#     block_group.draw(SCREEN)
 
-    # slime1.random_movement(movement, camera)
+#     # show status
+#     hotbar.draw(SCREEN)
+#     show_hp(SCREEN)
 
-    # process the user keyboard + mouse input
-    control.event_loop(player_group, item_group, enemy_group, block_group)            
+#     # slime1.random_movement(movement, camera)
 
-    camera.update(gamemap)
+#     # process the user keyboard + mouse input
+#     control.event_loop(player_group, item_group, enemy_group, block_group)            
+
+#     camera.update(gamemap)
     
-    # the save time is 20s
-    auto_save = save_game(auto_save)
+#     # the save time is 20s
+#     auto_save = save_game(auto_save)
     
-    # save_game(auto_save - 18000)
-    fps_clock.display_fps(SCREEN)
-    pg.display.update()
+#     # save_game(auto_save - 18000)
+#     fps_clock.display_fps(SCREEN)
+#     pg.display.update()
+
