@@ -50,8 +50,6 @@ class Gameplay:
 
     """ def setup_block_group() """
 
-
-    
     def game_loop():
         # fill screen with white
         self.screen.fill(COLOR['white'])
