@@ -152,6 +152,16 @@ class Map:
         self.y += move_y
         for sprite in self.tile_sprites:
             sprite.rect.move_ip(move_x, move_y)
+
+    def get_save_data(self):
+        data_dict = {'x': self.x, 'y': self.y}
+        return data_dict
+    
+    def load_data(self, data_dict):
+        self.x = data_dict['x']
+        self.y = data_dict['y']
+
+
 if __name__ == '__main__':
     screen = pg.display.set_mode((1920, 1080))
     _map = Map(r'Slime hunter graphics/map.tmx')

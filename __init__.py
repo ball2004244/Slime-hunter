@@ -72,15 +72,17 @@ for block in block_list:
 # create map
 gamemap = Map(r'map/Slime hunter graphics/map.tmx')
 # create a game camera
-camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(), gamemap.width, gamemap.height)
+camera = Camera(player, SCREEN.get_width(), SCREEN.get_height(),
+                gamemap.width, gamemap.height)
 
 # define a dict for all items
 item_dict = {
-        'apple': Apple,
-        'sword': Sword,
-        'leather_armor': LeatherArmor,
-        'wooden_pickaxe': WoodenPickaxe
-    }
+    'apple': Apple,
+    'sword': Sword,
+    'leather_armor': LeatherArmor,
+    'wooden_pickaxe': WoodenPickaxe
+}
+
 
 def save_game(start_time=pg.time.get_ticks()):
     # save every 20secs
@@ -110,12 +112,21 @@ def save_game(start_time=pg.time.get_ticks()):
         reset_file('save/hotbar.pkl')
         save_to_file('save/hotbar.pkl', hotbar.get_save_data())
 
+        # # save camera:
+        # reset_file('save/camera.pkl')
+        # save_to_file('save/camera.pkl', camera.get_save_data())
+        
+        # # save map"
+        # reset_file('save/map.pkl')
+        # save_to_file('save/map.pkl', gamemap.get_save_data())
+
         print('Saving')
         return current
     return start_time
 
+
 def load_game():
-    # empty each group first 
+    # empty each group first
     player_group.empty()
     load_object(player, 'save/player.pkl')
     player_group.add(player)
@@ -123,17 +134,25 @@ def load_game():
     # load hotbar
     hotbar.load_data(load_from_file('save/hotbar.pkl'), item_dict)
 
+    # # load map
+    # gamemap.load_data(load_from_file('save/map.pkl'))
+
+    # # load camera
+    # camera.load_data(load_from_file('save/camera.pkl'))
+
     item_group.empty()
     item_data_list = load_from_file('save/item.pkl')
     for data in item_data_list:
-        item = item_dict[data['name']](0, 0, data['width'], data['height'], COLOR[data['color']])
+        item = item_dict[data['name']](
+            0, 0, data['width'], data['height'], COLOR[data['color']])
         item.load_data(data)
         item_group.add(item)
 
     enemy_group.empty()
     enemy_data_list = load_from_file('save/enemy.pkl')
     for data in enemy_data_list:
-        enemy = Slime(0, 0, data['width'], data['height'], COLOR[data['color']], coin)
+        enemy = Slime(0, 0, data['width'],
+                      data['height'], COLOR[data['color']], coin)
         enemy.load_data(data)
         enemy_group.add(enemy)
 
@@ -142,7 +161,8 @@ def show_hp(screen):
     status_bar.show_status(screen, player)
     for enemy in enemy_group:
         enemy.show_hp(screen)
-# create gpytameplay state
+
+# create gameplay state
 # gameplay = Gameplay(player_group, enemy_group)
 # gameplay.set_inventory(inventory)
 # gameplay.set_hotbar(hotbar)

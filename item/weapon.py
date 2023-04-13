@@ -29,6 +29,11 @@ class Sword(Weapon):
         self.attack_power = 10
         self.color = 'blue'
 
+        self.image = pg.image.load('asset/image/sword_01b.png')
+        self.image = pg.transform.scale(self.image, (self.width, self.height))
+        self.rect = self.image.get_rect()
+
+
     def equip(self, player):
         super().equip(player)
         player.image = pg.Surface((self.width, self.height))

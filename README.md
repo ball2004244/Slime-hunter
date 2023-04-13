@@ -17,16 +17,18 @@ The game is written in Pygame. The general idea is a simple 2D game with top-dow
 ## Credits
 @ball2004244
 
-## Current features
-- Player movement
-- Player attack
-
-## Version
+## Current Version
 Version 0.1.0:
-- Add monsters *
-- Add items *
-- Add crafting, inventory *
-- Add menu *
-- Add map
+- Added Slime
+- Added Sword/Armor
+- Added Pickaxe
+- Add Inventory/Hotbar
+- Add map/camera
 - Add save/load 
-- Add sound
+
+## Upcoming Features
+- Add more monsters
+- Add more items
+- Add more biomes
+- Add crafting mechanism
+- Add sound effects

@@ -10,6 +10,7 @@ class Armor(Item):
         self.tag = 'armor'
         self.defense = 0
 
+
 class LeatherArmor(Armor):
     def __init__(self, x, y, width, height, color):
         super().__init__(x, y, width, height, color)
@@ -17,6 +18,10 @@ class LeatherArmor(Armor):
         self.defense = 10
         self.color = 'light_brown'
 
+        self.image = pg.image.load('asset/image/armor_01a.png')
+        self.image = pg.transform.scale(self.image, (self.width, self.height))
+        self.rect = self.image.get_rect()
+        
     def equip(self, player):
         super().equip(player)
         player.image = pg.Surface((self.width, self.height))

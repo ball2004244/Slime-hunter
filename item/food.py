@@ -9,6 +9,10 @@ class Apple(Item):
         self.name = 'apple'
         self.color = 'red'
 
+        self.image = pg.image.load('asset/image/candy_02a.png')
+        self.image = pg.transform.scale(self.image, (self.width, self.height))
+        self.rect = self.image.get_rect()
+
 
 
 

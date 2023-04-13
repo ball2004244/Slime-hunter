@@ -36,9 +36,9 @@ while True:
 
     camera.update(gamemap)
     
-    auto_save = save_game(auto_save)
-
     # the save time is 20s
+    auto_save = save_game(auto_save)
+    
     # save_game(auto_save - 18000)
     fps_clock.display_fps(SCREEN)
     pg.display.update()
