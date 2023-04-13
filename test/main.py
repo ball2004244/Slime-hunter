@@ -10,27 +10,33 @@ pg.init()
 window_setup()
 fps_clock = FPS_clock()
 
+""" load_game() """
+
+# save_list(item_list, 'save/item.pkl')
 # main game loop
 while True:
     # fill screen with white
     SCREEN.fill(COLOR['white'])
 
     gamemap.render(SCREEN)
-    # draw background
+
     player_group.draw(SCREEN)
-    
-    camera.update(gamemap)
-    # print(camera.get_pos())
-    """ enemy_group.draw(SCREEN)
+    enemy_group.draw(SCREEN)
     item_group.draw(SCREEN)
     block_group.draw(SCREEN)
 
     # show status
-    status_bar.show_status(SCREEN, player)
     hotbar.draw(SCREEN)
-    show_hp(SCREEN) """
-    # process the user keyboard + mouse input"""
-    control.event_loop(player_group, None, None, None)         
+    show_hp(SCREEN)
 
+    # slime1.random_movement(movement, camera)
+
+    # process the user keyboard + mouse input
+    control.event_loop(player_group, item_group, enemy_group, block_group)            
+
+    camera.update(gamemap)
+    
+    save_game()
+    
     fps_clock.display_fps(SCREEN)
     pg.display.update()

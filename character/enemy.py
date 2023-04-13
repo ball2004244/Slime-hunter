@@ -25,6 +25,7 @@ class Enemy(pg.sprite.Sprite):
 
         self.direction = 'right'
 
+        self.color = 'green'
         self.attack_timer = pg.time.get_ticks()
         self.move_timer = pg.time.get_ticks()
 
@@ -103,6 +104,19 @@ class Enemy(pg.sprite.Sprite):
         # reset the timer 
         self.move_timer = current_time
 
+    def get_save_data(self):
+        # get position first
+        save_dict = {'name': self.name, 'x': self.rect.x, 'y': self.rect.y,
+                     'width': self.width, 'height': self.height, 'color': self.color}
+
+        return save_dict
+
+    def load_data(self, save_data):
+        self.rect.x = save_data['x']
+        self.rect.y = save_data['y']
+        self.width = save_data['width']
+        self.height = save_data['height']
+        self.color = save_data['color']
 
 # create Slime class as a sprite
 class Slime(Enemy):
@@ -112,6 +126,7 @@ class Slime(Enemy):
         self.setup_status()
         self.tag = 'enemy'
         self.name = 'slime'
+        self.color = 'green'
 
     def setup_status(self):
         super().setup_status()

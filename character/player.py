@@ -1,10 +1,12 @@
-import pygame as pg 
+import pygame as pg
 from pygame.locals import *
 from setup import SCREEN, COLOR
 
 pg.init()
 
 # create a character class as a sprite
+
+
 class Player(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()
@@ -31,7 +33,6 @@ class Player(pg.sprite.Sprite):
 
         self.attack_timer = pg.time.get_ticks()
 
-
     def setup_status(self):
         self.max_hp = 100
         self.hp = self.max_hp
@@ -40,7 +41,6 @@ class Player(pg.sprite.Sprite):
         self.defense = 10
         self.default_speed = 3
         self.speed = self.default_speed
-
 
     def setup_equipment(self):
         self.armor = None
@@ -62,11 +62,11 @@ class Player(pg.sprite.Sprite):
         self.speed_right = self.speed
 
     # create 4 functions to move the character
-    def move_up(self): 
+    def move_up(self):
         if self.top_transition:
             self.speed_top = 0
             return
-        
+
         self.speed_top = self.speed
 
         if self.rect.y > 0:
@@ -77,7 +77,7 @@ class Player(pg.sprite.Sprite):
         if self.bottom_transition:
             self.speed_bottom = 0
             return
-        
+
         self.speed_bottom = self.speed
 
         if self.rect.y < SCREEN.get_height() - self.rect.height:
@@ -99,9 +99,9 @@ class Player(pg.sprite.Sprite):
         if self.right_transition:
             self.speed_right = 0
             return
-        
+
         self.speed_right = self.speed
-        
+
         if self.rect.x < SCREEN.get_width() - self.rect.width:
             self.rect.x += self.speed_right
             self.direction = 'right'
@@ -109,7 +109,7 @@ class Player(pg.sprite.Sprite):
     def run(self):
         if not self.alive:
             return
-        
+
         if self.run_state == True:
             self.speed = self.default_speed * 2
         else:
@@ -139,10 +139,10 @@ class Player(pg.sprite.Sprite):
         if self.rect.colliderect(item.rect):
             inventory.add_item(item)
 
-    def get_damage(self, damage):    
+    def get_damage(self, damage):
         if not self.alive:
             return
-        
+
         if damage > self.defense:
             self.hp -= (damage - self.defense)
 
@@ -162,17 +162,17 @@ class Player(pg.sprite.Sprite):
         if tool == None:
             print('You need a tool to break the block.')
             return
-        
+
         # check if the tool is a pickaxe
         if tool.tag != 'tool':
             print('You need a pickaxe to break the block.')
             return
-        
-        # check if there is a pickage str in the name 
+
+        # check if there is a pickage str in the name
         if 'pickaxe' not in tool.name:
             print('You need a pickaxe to break the block.')
             return
-        
+
         block.get_broken(tool, inventory)
 
     def die(self):
@@ -182,7 +182,8 @@ class Player(pg.sprite.Sprite):
 
     def get_save_data(self):
         # get position first
-        save_dict = {'x': self.rect.x, 'y': self.rect.y, 'width': self.width, 'height': self.height}
+        save_dict = {'x': self.rect.x, 'y': self.rect.y,
+                     'width': self.width, 'height': self.height}
 
         return save_dict
 
@@ -194,6 +195,7 @@ class Player(pg.sprite.Sprite):
 
     def get_pos(self):
         return self.rect.x, self.rect.y
+
 
 class StatusBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
@@ -212,25 +214,24 @@ class StatusBar(pg.sprite.Sprite):
     def show_hp(self, screen, player):
         # show hp on top of the slime, color: red
         # draw a rect similar to enemy hp bar
-        pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y, player.hp / player.max_hp * self.width, 10))
+        pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y,
+                     player.hp / player.max_hp * self.width, 10))
 
     def show_mp(self, screen, player):
         # show hp on top of the slime, color: red
-        pg.draw.rect(screen, COLOR['blue'], (self.rect.x, self.rect.y + 20, player.mp * 2, 10))
-    
+        pg.draw.rect(screen, COLOR['blue'], (self.rect.x,
+                     self.rect.y + 20, player.mp * 2, 10))
+
     def show_status(self, screen, player):
         self.show_hp(screen, player)
         self.show_mp(screen, player)
-    
+
     def get_status(self):
         pass
 
     def get_pos(self):
         pass
-    
+
+
 if __name__ == '__main__':
     print('This is a module for player class. Please run main.py to start the game.')
-
-
-
-

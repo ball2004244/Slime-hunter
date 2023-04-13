@@ -13,8 +13,9 @@ class Armor(Item):
 class LeatherArmor(Armor):
     def __init__(self, x, y, width, height, color):
         super().__init__(x, y, width, height, color)
-        self.name = 'leather armor'
+        self.name = 'leather_armor'
         self.defense = 10
+        self.color = 'light_brown'
 
     def equip(self, player):
         super().equip(player)

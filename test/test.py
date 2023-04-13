@@ -138,6 +138,9 @@ if __name__ == '__main__':
 import pygame as pg
 from pygame.locals import *
 import pytmx
+from setup import SCREEN, COLOR, window_setup, FPS_clock
+from __init__ import *
+
 
 pg.init()
 
@@ -207,6 +210,24 @@ if __name__ == '__main__':
 
         screen.blit(background, (0, 0))
         _map.render(screen)
+        SCREEN.fill(COLOR['white'])
+
+    
+        player_group.draw(SCREEN)
+        enemy_group.draw(SCREEN)
+        item_group.draw(SCREEN)
+        """ block_group.draw(SCREEN) """
+
+        # show status
+        hotbar.draw(SCREEN)
+        show_hp(SCREEN)
+
+        # slime1.random_movement(movement, camera)
+
+        # process the user keyboard + mouse input
+        control.event_loop(player_group, item_group, enemy_group, block_group)            
+
+        camera.update(gamemap)
         pg.display.update()
 
     pg.quit()

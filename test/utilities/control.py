@@ -6,11 +6,10 @@ import sys
 pg.init()
 
 class Control:
-    def __init__(self, player, inventory, hotbar, camera):
+    def __init__(self, player, inventory, hotbar):
         self.player = player
         self.inventory = inventory
         self.hotbar = hotbar
-        self.camera = camera
 
     def move(self, keys):
         # moving the player
@@ -35,27 +34,32 @@ class Control:
     def mouse_check(self, event, player_group, enemy_group, item_group, block_group):
         # check collision between player and enemy
         if event.button == 1:
-            collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
-            if collide_list:
-                enemy = collide_list[self.player][0]
-                self.player.attack(enemy, self.hotbar.current_item())
+            for enemy in enemy_group:
+                self.player.hitbox.colliderect(enemy.rect)
+                enemy.get_damage(self.player.attack_power, self.inventory)
 
         # check collision between player and block
         if event.button == 1:
             collide_list = pg.sprite.groupcollide(player_group, block_group, False, False)
             if collide_list:
                 block = collide_list[self.player][0]
-                self.player.break_block(self.hotbar.current_item(), block)
+                self.player.break_block(self.hotbar.current_item(), block, self.inventory)
 
         # check collision between player and item
         if event.button == 3:
             collide_list = pg.sprite.groupcollide(player_group, item_group, False, False)
             if collide_list:
                 item = collide_list[self.player][0]
-                self.player.pickup(self.hotbar, self.inventory, item)
+                self.player.pickup(self.inventory, item)
          
 
     def event_loop(self, player_group, item_group, enemy_group, block_group):   
+        collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
+        if collide_list:
+            enemy = collide_list[self.player][0]
+
+            enemy.attack(self.player)
+
         keys = pg.key.get_pressed()
         self.move(keys)
 
@@ -73,4 +77,3 @@ class Control:
 
             elif event.type == MOUSEBUTTONDOWN:
                 self.mouse_check(event, player_group, enemy_group, item_group, block_group)
-                

@@ -26,5 +26,6 @@ class WoodenPickaxe(Tool):
         self.name = 'wooden_pickaxe'
         self.tag = 'tool'
         self.mining_power = 1
+        self.color = 'purple'
 
 

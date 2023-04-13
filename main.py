@@ -12,6 +12,7 @@ fps_clock = FPS_clock()
 
 load_game()
 
+auto_save = pg.time.get_ticks()
 # main game loop
 while True:
     # fill screen with white
@@ -28,14 +29,16 @@ while True:
     hotbar.draw(SCREEN)
     show_hp(SCREEN)
 
-    slime1.random_movement(movement, camera)
+    # slime1.random_movement(movement, camera)
 
     # process the user keyboard + mouse input
     control.event_loop(player_group, item_group, enemy_group, block_group)            
 
     camera.update(gamemap)
     
-    save_game()
-    
+    auto_save = save_game(auto_save)
+
+    # the save time is 20s
+    # save_game(auto_save - 18000)
     fps_clock.display_fps(SCREEN)
     pg.display.update()

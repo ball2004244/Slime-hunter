@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.locals import *
-
+from setup import COLOR
 pg.init()
 
 class Inventory:
@@ -20,7 +20,6 @@ class Inventory:
         2. The inventory is full
         3. The item stack is full
         4. The hotbar is not full
-
         The item will fill up the hotbar first, then the inventory
         '''
 
@@ -182,5 +181,33 @@ class HotBar(pg.sprite.Sprite):
         current_box = pg.Rect(box_x + box_width * self.current_slot, box_y, box_width, box_height)
         pg.draw.rect(screen, (255, 0, 0), current_box, 1)
 
+   
+    def get_save_data(self):    
+        save_data = []
+        for item in self.hotbar_slots.values():
+            if item != None:
+                save_data.append(item.get_save_data())
+            else:
+                save_data.append(None)
 
+        data_dict = {'hotbar_items': self.hotbar_items, 'hotbar_slots': save_data}
+        return data_dict
+    def load_data(self, data_dict, item_dict):
+       
+        self.hotbar_items = data_dict['hotbar_items']
+        
+        # This is a list of item
+        # each element is a dictionary of item's data
+        # we need to read the data and reconstruct with load_data method
+        save_data = data_dict['hotbar_slots']
+        for data in save_data:
+            if data != None:
+                item = item_dict[data['name']](0, 0, 0, 0, COLOR[data['color']])
+                item.load_data(data)
+                self.hotbar_slots[save_data.index(data)] = item
+            else:
+                self.hotbar_slots[save_data.index(data)] = None
+
+
+    
         

@@ -115,3 +115,19 @@ class Camera:
 
     def get_pos(self):
         return self.x, self.y
+
+    '''
+    SAVE METHODS
+    '''
+    def get_save_data(self):
+        # get position first
+        save_dict = {'x': self.x, 'y': self.y,
+                     'width': self.width, 'height': self.height}
+
+        return save_dict
+
+    def load_data(self, save_data):
+        self.x = save_data['x']
+        self.y = save_data['y']
+        self.width = save_data['width']
+        self.height = save_data['height']

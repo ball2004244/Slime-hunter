@@ -116,23 +116,18 @@ class Camera:
     def get_pos(self):
         return self.x, self.y
 
+    '''
+    SAVE METHODS
+    '''
+    def get_save_data(self):
+        # get position first
+        save_dict = {'x': self.x, 'y': self.y,
+                     'width': self.width, 'height': self.height}
 
-'''
-DUMMY MAP for testing
-'''
+        return save_dict
 
-
-'''class Map:
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-
-        # import image
-        self.image = pg.image.load('background.jpg')
-        self.image = pg.transform.scale(self.image, (self.width, self.height))
-
-    def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
-'''
+    def load_data(self, save_data):
+        self.x = save_data['x']
+        self.y = save_data['y']
+        self.width = save_data['width']
+        self.height = save_data['height']
