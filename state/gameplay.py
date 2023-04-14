@@ -116,6 +116,16 @@ class Gameplay:
             item = item_choice(x, y, 50, 50)
             self.item_group.add(item)
         
+    def get_movable_objects(self):
+        # store all of them in a lists
+        movable_objects = []
+        movable_objects.extend(self.player_group.sprites())
+        movable_objects.extend(self.enemy_group.sprites())
+        movable_objects.extend(self.item_group.sprites())
+        movable_objects.extend(self.block_group.sprites())
+
+        return movable_objects
+
     def game_loop(self):
         # fill screen with white
         self.screen.fill((255, 255, 255))
@@ -135,7 +145,7 @@ class Gameplay:
         # # process the user keyboard + mouse input
         self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group)          
 
-        self.camera.update(self.gamemap)
+        self.camera.update(self.gamemap, self.get_movable_objects())
         
         # auto save every 10 seconds
         self.auto_save()

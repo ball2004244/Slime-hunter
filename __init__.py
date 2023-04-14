@@ -105,18 +105,14 @@ def fast_save():
     reset_file('save/inventory.pkl')
     save_to_file('save/inventory.pkl', inventory.get_save_data())
 
-    # # save camera:
-    # reset_file('save/camera.pkl')
-    # save_to_file('save/camera.pkl', camera.get_save_data())
+    # save camera:
+    reset_file('save/camera.pkl')
+    save_to_file('save/camera.pkl', camera.get_save_data())
     
-    # # save map"
-    # reset_file('save/map.pkl')
-    # save_to_file('save/map.pkl', gamemap.get_save_data())
-
     print('Saving')
 
 # save every 20secs
-def save_game(start_time=pg.time.get_ticks()):
+'''def save_game(start_time=pg.time.get_ticks()):
     current = pg.time.get_ticks()
     if current - start_time > 20000:
         reset_file('save/player.pkl')
@@ -143,17 +139,17 @@ def save_game(start_time=pg.time.get_ticks()):
         reset_file('save/hotbar.pkl')
         save_to_file('save/hotbar.pkl', hotbar.get_save_data())
 
-        # # save camera:
-        # reset_file('save/camera.pkl')
-        # save_to_file('save/camera.pkl', camera.get_save_data())
+        # save camera:
+        reset_file('save/camera.pkl')
+        save_to_file('save/camera.pkl', camera.get_save_data())
         
-        # # save map"
-        # reset_file('save/map.pkl')
-        # save_to_file('save/map.pkl', gamemap.get_save_data())
+        # save map"
+        reset_file('save/map.pkl')
+        save_to_file('save/map.pkl', gamemap.get_save_data())
 
         print('Saving')
         return current
-    return start_time
+    return start_time'''
 
 def load_game():
     # empty each group first
@@ -166,11 +162,10 @@ def load_game():
 
     # load inventory
     inventory.load_data(load_from_file('save/inventory.pkl'))
-    # # load map
-    # gamemap.load_data(load_from_file('save/map.pkl'))
+    
 
-    # # load camera
-    # camera.load_data(load_from_file('save/camera.pkl'))
+    # load camera
+    camera.load_data(load_from_file('save/camera.pkl'), gamemap, gameplay.get_movable_objects())
 
     item_group.empty()
     item_data_list = load_from_file('save/item.pkl')

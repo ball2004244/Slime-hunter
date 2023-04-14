@@ -53,7 +53,8 @@ class Coin(Resource):
         self.name = 'coin'
         self.tag = 'coin'
 
-        # self.image = pg.image.load('assets/coin.png')
+        self.image = pg.image.load('asset/image/coin.png')
+        self.image = pg.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

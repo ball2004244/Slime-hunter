@@ -2,7 +2,7 @@
 - Player attack range mechanism
 - Save/Load mechanism
 - Inventory UI(Optional)
-- Fixed object position so that it is not affected by camera movement
+- Fixed object position so that it is not affected by camera movement: Done
 
 Game state:
 - Title screen
