@@ -14,18 +14,16 @@ class Tool(Item):
 
     def equip(self, player):
         super().equip(player)
-        player.image = pg.Surface((self.width, self.height))
-        player.image.fill(self.color)
-        player.rect = player.image.get_rect()
-        player.rect.x = self.rect.x
-        player.rect.y = self.rect.y
+        self.rect.x = player.rect.x
+        self.rect.y = player.rect.y
 
 class WoodenPickaxe(Tool):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color=(255, 0, 255)):
         super().__init__(x, y, width, height, color)
         self.name = 'wooden_pickaxe'
         self.tag = 'tool'
         self.mining_power = 1
-        self.color = 'purple'
+
+        self.color = (255, 0, 255)
 
 

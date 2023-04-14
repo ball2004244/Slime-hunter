@@ -25,7 +25,8 @@ class Enemy(pg.sprite.Sprite):
 
         self.direction = 'right'
 
-        self.color = 'green'
+        self.color = color
+
         self.attack_timer = pg.time.get_ticks()
         self.move_timer = pg.time.get_ticks()
 
@@ -126,7 +127,7 @@ class Slime(Enemy):
         self.setup_status()
         self.tag = 'enemy'
         self.name = 'slime'
-        self.color = 'green'
+        self.color = color
 
     def setup_status(self):
         super().setup_status()

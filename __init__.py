@@ -1,5 +1,4 @@
 import pygame as pg
-import random
 from setup import COLOR, SCREEN, FPS_clock, window_setup
 from character.player import Player, StatusBar
 from character.enemy import Slime
@@ -12,7 +11,6 @@ from item.resource import Wood, Stone, Coin
 from utilities.control import Control
 from utilities.camera import Camera
 from utilities.inventory import Inventory, HotBar
-from utilities.helper import movement
 from save.save import save_object, load_object, reset_file, save_to_file, load_from_file
 from map.map import Map
 from state.gameplay import Gameplay
@@ -22,7 +20,7 @@ window_setup()
 # create clock
 fps_clock = FPS_clock()
 
-# create pickable items
+'''# create pickable items
 apple = Apple(300, 300, 30, 30, COLOR['red'])
 apple2 = Apple(400, 400, 30, 30, COLOR['red'])
 sword = Sword(500, 500, 30, 30, COLOR['blue'])
@@ -32,7 +30,6 @@ wooden_pickaxe = WoodenPickaxe(700, 700, 30, 30, COLOR['purple'])
 # define items
 wood = Wood(0, 0, 30, 30)
 stone = Stone(0, 0, 30, 30)
-coin = Coin(0, 0, 30, 30)
 
 # create blocks
 wood_block = WoodBlock(100, 650, 50, 50, COLOR['brown'], wood)
@@ -40,7 +37,10 @@ stone_block = StoneBlock(200, 650, 50, 50, COLOR['gray'], stone)
 
 # create enemies
 slime1 = Slime(100, 100, 50, 50, COLOR['black'], coin)
+'''
 
+
+coin = Coin(0, 0, 40, 40, COLOR['yellow'])
 
 # define player
 player = Player(700, 500, 70, 70, COLOR['green'])
@@ -51,10 +51,6 @@ status_bar = StatusBar(30, 30, 200, 50, COLOR['black'])
 
 control = Control(player, inventory, hotbar)
 
-# create lists
-item_list = [apple, apple2, sword, leather_armor, wooden_pickaxe]
-enemy_list = [slime1]
-block_list = [wood_block, stone_block]
 
 # create pygame sprite groups
 item_group = pg.sprite.Group()
@@ -64,16 +60,6 @@ block_group = pg.sprite.Group()
 
 # add sprites to groups
 player_group.add(player)
-
-for item in item_list:
-    item_group.add(item)
-
-for enemy in enemy_list:
-    enemy_group.add(enemy)
-
-for block in block_list:
-    block_group.add(block)
-
 
 # create map
 gamemap = Map(r'map/Slime hunter graphics/map.tmx')
@@ -90,9 +76,43 @@ item_dict = {
     'coin': Coin
 }
 
+def fast_save():
+    reset_file('save/player.pkl')
+    for obj in player_group:
+        save_object(obj, 'save/player.pkl')
 
+    item_list = []
+    for obj in item_group:
+        saved_data = obj.get_save_data()
+        item_list.append(saved_data)
+
+    reset_file('save/item.pkl')
+    save_to_file('save/item.pkl', item_list)
+
+    enemy_list = []
+    for obj in enemy_group:
+        saved_data = obj.get_save_data()
+        enemy_list.append(saved_data)
+
+    reset_file('save/enemy.pkl')
+    save_to_file('save/enemy.pkl', enemy_list)
+
+    # save hotbar:
+    reset_file('save/hotbar.pkl')
+    save_to_file('save/hotbar.pkl', hotbar.get_save_data())
+
+    # # save camera:
+    # reset_file('save/camera.pkl')
+    # save_to_file('save/camera.pkl', camera.get_save_data())
+    
+    # # save map"
+    # reset_file('save/map.pkl')
+    # save_to_file('save/map.pkl', gamemap.get_save_data())
+
+    print('Saving')
+
+# save every 20secs
 def save_game(start_time=pg.time.get_ticks()):
-    # save every 20secs
     current = pg.time.get_ticks()
     if current - start_time > 20000:
         reset_file('save/player.pkl')
@@ -131,7 +151,6 @@ def save_game(start_time=pg.time.get_ticks()):
         return current
     return start_time
 
-
 def load_game():
     # empty each group first
     player_group.empty()
@@ -151,7 +170,7 @@ def load_game():
     item_data_list = load_from_file('save/item.pkl')
     for data in item_data_list:
         item = item_dict[data['name']](
-            0, 0, data['width'], data['height'], COLOR[data['color']])
+            0, 0, data['width'], data['height'], data['color'])
         item.load_data(data)
         item_group.add(item)
 
@@ -159,7 +178,7 @@ def load_game():
     enemy_data_list = load_from_file('save/enemy.pkl')
     for data in enemy_data_list:
         enemy = Slime(0, 0, data['width'],
-                      data['height'], COLOR[data['color']], coin)
+                      data['height'], data['color'], coin)
         enemy.load_data(data)
         enemy_group.add(enemy)
 
@@ -169,20 +188,11 @@ def show_hp(screen):
     for enemy in enemy_group:
         enemy.show_hp(screen)
 
-# create random number at random position
-def create_enemies():
-    num_enemies = random.randint(5, 10)
-    for i in range(num_enemies):
-        x = random.randint(0, gamemap.width)
-        y = random.randint(0, gamemap.height)
-        enemy = Slime(x, y, 50, 50, COLOR['black'], coin)
-        enemy_group.add(enemy)
-
 gameplay = Gameplay(SCREEN)
 gameplay.setup_map(gamemap)
 gameplay.setup_entity_group(player_group, item_group, enemy_group, block_group)
 gameplay.setup_inventory(inventory, hotbar)
-gameplay.setup_utilities(camera, control, save_game, fps_clock)
+gameplay.setup_utilities(camera, control, fast_save, fps_clock)
 gameplay.setup_status(status_bar)
-# create_enemies()
 gameplay.create_enemy(Slime, COLOR['green'], coin)
+gameplay.create_item(item_dict)

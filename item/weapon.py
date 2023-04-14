@@ -23,7 +23,7 @@ class Weapon(Item):
 
 
 class Sword(Weapon):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color=(0, 0, 255)):
         super().__init__(x, y, width, height, color)
         self.name = 'sword'
         self.attack_power = 10
@@ -32,12 +32,11 @@ class Sword(Weapon):
         self.image = pg.image.load('asset/image/sword_01b.png')
         self.image = pg.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 
     def equip(self, player):
         super().equip(player)
-        player.image = pg.Surface((self.width, self.height))
-        player.image.fill(self.color)
-        player.rect = player.image.get_rect()
-        player.rect.x = self.rect.x
-        player.rect.y = self.rect.y
+        self.rect.x = player.rect.x
+        self.rect.y = player.rect.y

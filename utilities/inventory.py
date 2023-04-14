@@ -191,6 +191,7 @@ class HotBar(pg.sprite.Sprite):
 
         data_dict = {'hotbar_items': self.hotbar_items, 'hotbar_slots': save_data}
         return data_dict
+    
     def load_data(self, data_dict, item_dict):
        
         self.hotbar_items = data_dict['hotbar_items']
@@ -204,9 +205,5 @@ class HotBar(pg.sprite.Sprite):
                 item = item_dict[data['name']](0, 0, 0, 0, data['color'])
                 item.load_data(data)
                 self.hotbar_slots[save_data.index(data)] = item
-            else:
-                self.hotbar_slots[save_data.index(data)] = None
-
 
     
-        

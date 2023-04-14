@@ -7,7 +7,7 @@ pg.init()
 
 class Resource(Item):
     def __init__(self, x, y, width, height, stack_capacity=16):
-        super().__init__(x, y, width, height, COLOR['black'])
+        super().__init__(x, y, width, height, COLOR['yellow'])
         self.stack_capacity = stack_capacity
         self.pickup_state = False
         
@@ -48,7 +48,7 @@ class Stone(Resource):
         pg.draw.rect(screen, (105, 105, 105), (self.rect.x + 10, self.rect.y + 10, self.rect.width - 20, self.rect.height - 20))
 
 class Coin(Resource):
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, color=(255, 255, 0)):
         super().__init__(x, y, width, height)
         self.name = 'coin'
         self.tag = 'coin'
@@ -57,7 +57,8 @@ class Coin(Resource):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.color = color
 
     def draw(self, screen):
         # draw a yellow circle
-        pg.draw.circle(screen, (255, 255, 0), (self.rect.x + 10, self.rect.y + 10), 10)
+        pg.draw.circle(screen, self.color, (self.rect.x + self.rect.width // 2, self.rect.y + self.rect.height // 2), self.rect.width // 2)

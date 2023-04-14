@@ -7,7 +7,7 @@ pg.init()
 
 
 class Item(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height, color='black'):
+    def __init__(self, x, y, width, height, color=(0, 0, 0)):
         super().__init__()
         self.image = pg.Surface((width, height))
         self.image.fill(color)
@@ -18,7 +18,7 @@ class Item(pg.sprite.Sprite):
         self.height = height
         self.pickup_state = True
 
-        self.color = 'black'
+        self.color = color
 
         self.tag = 'item'
         self.name = 'item'
@@ -37,7 +37,7 @@ class Item(pg.sprite.Sprite):
     def get_save_data(self):
         # get position first
         save_dict = {'name': self.name, 'x': self.rect.x, 'y': self.rect.y,
-                     'width': self.width, 'height': self.height, 'color': self.color}
+                     'width': self.width, 'height': self.height, 'color': self.color, 'picked_up': self.pickup_state}
 
         return save_dict
 
@@ -48,3 +48,10 @@ class Item(pg.sprite.Sprite):
         self.height = save_data['height']
         self.rect.width = self.width
         self.rect.height = self.height
+        self.color = save_data['color']
+
+        self.pickup_state = save_data['picked_up']
+        if not self.pickup_state:
+            self.kill()
+
+        
