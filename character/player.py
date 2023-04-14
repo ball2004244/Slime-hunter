@@ -42,6 +42,8 @@ class Player(pg.sprite.Sprite):
         self.default_speed = 3
         self.speed = self.default_speed
 
+        print(self.get_status())
+
     def setup_equipment(self):
         self.armor = None
         self.helmet = None
@@ -181,9 +183,10 @@ class Player(pg.sprite.Sprite):
         self.speed = 0
 
     def get_save_data(self):
-        # get position first
+        status = self.get_status()
+
         save_dict = {'x': self.rect.x, 'y': self.rect.y,
-                     'width': self.width, 'height': self.height}
+                     'width': self.width, 'height': self.height, 'status': status}
 
         return save_dict
 
@@ -193,8 +196,24 @@ class Player(pg.sprite.Sprite):
         self.width = save_data['width']
         self.height = save_data['height']
 
+        self.status = save_data['status']
+        self.load_status(self.status)
+
+    def get_status(self):
+        self.status = {'max_hp': self.max_hp, 'hp': self.hp, 'mp': self.mp,
+                       'attack_power': self.attack_power, 'defense': self.defense, 'speed': self.speed}
+        return self.status
+    
     def get_pos(self):
         return self.rect.x, self.rect.y
+    
+    def load_status(self, status):
+        self.max_hp = status['max_hp']
+        self.hp = status['hp']
+        self.mp = status['mp']
+        self.attack_power = status['attack_power']
+        self.defense = status['defense']
+        self.speed = status['speed']
 
 
 class StatusBar(pg.sprite.Sprite):

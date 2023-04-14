@@ -101,6 +101,10 @@ def fast_save():
     reset_file('save/hotbar.pkl')
     save_to_file('save/hotbar.pkl', hotbar.get_save_data())
 
+    # save inventory
+    reset_file('save/inventory.pkl')
+    save_to_file('save/inventory.pkl', inventory.get_save_data())
+
     # # save camera:
     # reset_file('save/camera.pkl')
     # save_to_file('save/camera.pkl', camera.get_save_data())
@@ -160,6 +164,8 @@ def load_game():
     # load hotbar
     hotbar.load_data(load_from_file('save/hotbar.pkl'), item_dict)
 
+    # load inventory
+    inventory.load_data(load_from_file('save/inventory.pkl'))
     # # load map
     # gamemap.load_data(load_from_file('save/map.pkl'))
 
