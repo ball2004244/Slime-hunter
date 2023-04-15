@@ -7,6 +7,7 @@ class Gameplay:
     def __init__(self, SCREEN):
         self.screen = SCREEN
         self.timer = pg.time.get_ticks()
+        self.spawn_timer = pg.time.get_ticks()
     
     def setup_map(self, gamemap):
         self.gamemap = gamemap
@@ -39,20 +40,18 @@ class Gameplay:
     def auto_save(self):
         # set a timer to save the game
         current = pg.time.get_ticks()
-        if current - self.timer >= 10000:
-            self.timer = current
-            self.save_game()
-            # print('Saving')
+        if current - self.timer < 10000:
+            return
+        
+        self.timer = current
+        self.save_game()
+        # print('Saving')
 
-    def create_enemy(self, Enemy, color, coin):
-        num_slime = random.randint(5, 10)
-        for i in range(num_slime):
-            x = random.randint(100, 1000)
-            y = random.randint(100, 900)
-            enemy = Enemy(x, y, 50, 50, color, coin)
-            self.enemy_group.add(enemy)        
+    def setup_enemy(self, Enemy, color, coin):
+        self.Enemy = Enemy
+        self.color = color
+        self.coin = coin
 
-    # rewrite the create_enemy with random distribution
     def create_enemy(self, Enemy, color, coin):
         num_enemy = random.randint(5, 10)
 
@@ -62,14 +61,20 @@ class Gameplay:
         temp_x = []
         temp_y = []
         for i in range(num_enemy):
-            x = random.randint(100, 900)
-            y = random.randint(100, 900)
+            # generate a random position at least 100 pixels away from the player
+            dist = 0
+            while dist < 100:
+                x = random.randint(100, 900)
+                y = random.randint(100, 900)
+                dist = ((x - self.player.rect.x) ** 2 + (y - self.player.rect.y) ** 2) ** 0.5
 
             # if the current pos is too close to the previous pos, restart the random
             while len(temp_x) > 0 and abs(x - temp_x[-1]) < 100:
                 x = random.randint(100, 900)
+                dist = ((x - self.player.rect.x) ** 2 + (y - self.player.rect.y) ** 2) ** 0.5
             while len(temp_y) > 0 and abs(y - temp_y[-1]) < 100:
                 y = random.randint(100, 900)
+                dist = ((x - self.player.rect.x) ** 2 + (y - self.player.rect.y) ** 2) ** 0.5
 
             temp_x.append(x)
             temp_y.append(y)
@@ -84,6 +89,22 @@ class Gameplay:
             enemy = Enemy(x, y, 50, 50, color, coin)
             self.enemy_group.add(enemy)
 
+    def enemy_movement(self):
+        # enemy attack
+        for enemy in self.enemy_group:
+            enemy.move_towards_player(self.player)
+
+    def spawn_enemy(self, Enemy, color, coin):
+        # spawn every 10 seconds
+        current = pg.time.get_ticks()
+        if current - self.spawn_timer < 5000:
+            return
+        
+        self.spawn_timer = current
+        self.create_enemy(Enemy, color, coin)
+
+    def setup_item(self, item_dict):
+        self.item_dict = item_dict
 
     def create_item(self, item_dict):
         num_item = random.randint(5, 10)
@@ -140,7 +161,14 @@ class Gameplay:
         # # show status
         self.show_status()
         self.hotbar.draw(self.screen)
-        # # slime1.random_movement(movement, camera)
+
+        # player's hitbox
+        self.player.update_hitbox()
+
+        # game mechanics
+        self.spawn_enemy(self.Enemy, self.color, self.coin)
+        self.enemy_movement()
+
 
         # # process the user keyboard + mouse input
         self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group)          

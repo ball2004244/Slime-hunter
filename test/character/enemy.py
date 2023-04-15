@@ -28,9 +28,8 @@ class Enemy(pg.sprite.Sprite):
         self.attack_timer = pg.time.get_ticks()
         self.move_timer = pg.time.get_ticks()
 
-
     def setup_status(self):
-        self.max_hp = 10
+        self.max_hp = 100
         self.hp = self.max_hp
         self.mp = 0
         self.attack_power = 1

@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
         # process the user keyboard + mouse input
         control.event_loop(player_group, item_group, enemy_group, block_group)            
-
+        player.update_hitbox()
         camera.update(gamemap)
         pg.display.update()
 

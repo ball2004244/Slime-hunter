@@ -183,6 +183,16 @@ def load_game():
         enemy.load_data(data)
         enemy_group.add(enemy)
 
+def delete_save():
+    reset_file('save/player.pkl')
+    reset_file('save/item.pkl')
+    reset_file('save/enemy.pkl')
+    reset_file('save/hotbar.pkl')
+    reset_file('save/inventory.pkl')
+    reset_file('save/camera.pkl')
+    reset_file('save/map.pkl')
+    print('Save deleted')
+
 # show hp on top of the enemies
 def show_hp(screen):
     status_bar.show_status(screen, player)
@@ -195,5 +205,6 @@ gameplay.setup_entity_group(player_group, item_group, enemy_group, block_group)
 gameplay.setup_inventory(inventory, hotbar)
 gameplay.setup_utilities(camera, control, fast_save, fps_clock)
 gameplay.setup_status(status_bar)
-gameplay.create_enemy(Slime, COLOR['green'], coin)
+gameplay.setup_enemy(Slime, COLOR['red'], coin)
+gameplay.setup_item(item_dict)
 gameplay.create_item(item_dict)

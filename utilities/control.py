@@ -34,11 +34,9 @@ class Control:
     def mouse_check(self, event, player_group, enemy_group, item_group, block_group):
         # check collision between player and enemy
         if event.button == 1:
-            collide_list = pg.sprite.groupcollide(player_group, enemy_group, False, False)
-            if collide_list:
-                enemy = collide_list[self.player][0]
-
-                self.player.attack(enemy, self.hotbar.current_item(), self.inventory)
+            for enemy in enemy_group:
+                if self.player.hitbox.colliderect(enemy.rect):
+                 self.player.attack(enemy, self.hotbar.current_item(), self.inventory)
 
         # check collision between player and block
         if event.button == 1:

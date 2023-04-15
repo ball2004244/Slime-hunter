@@ -121,6 +121,9 @@ class Player(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def attack(self, enemy, weapon, inventory):
+        if not self.alive:
+            return
+
         current_time = pg.time.get_ticks()
         if current_time - self.attack_timer < 500:
             return
@@ -182,6 +185,38 @@ class Player(pg.sprite.Sprite):
         self.alive = False
         self.speed = 0
 
+    def get_status(self):
+        self.status = {'max_hp': self.max_hp, 'hp': self.hp, 'mp': self.mp,
+                       'attack_power': self.attack_power, 'defense': self.defense, 'speed': self.speed, 'alive': self.alive}
+        return self.status
+    
+    def get_pos(self):
+        return self.rect.x, self.rect.y
+    
+    def load_status(self, status):
+        self.max_hp = status['max_hp']
+        self.hp = status['hp']
+        self.mp = status['mp']
+        self.attack_power = status['attack_power']
+        self.defense = status['defense']
+        self.speed = status['speed']
+        self.alive = status['alive']
+
+    def update_hitbox(self):
+        # Hitbox
+        hitbox_size_multiplier = 2
+        hitbox_width = int(self.rect.width * hitbox_size_multiplier)
+        hitbox_height = int(self.rect.height * hitbox_size_multiplier)
+        hitbox_x_offset = int((hitbox_width - self.rect.width) / 2)
+        hitbox_y_offset = int((hitbox_height - self.rect.height) / 2)
+        self.hitbox = pg.Rect(self.rect.x - hitbox_x_offset, self.rect.y - hitbox_y_offset, hitbox_width, hitbox_height)
+
+        # Update hitbox position to match player position
+        hitbox_x_offset = int((self.hitbox.width - self.rect.width) / 2)
+        hitbox_y_offset = int((self.hitbox.height - self.rect.height) / 2)
+        self.hitbox.x = self.rect.x - hitbox_x_offset
+        self.hitbox.y = self.rect.y - hitbox_y_offset
+
     def get_save_data(self):
         status = self.get_status()
 
@@ -199,22 +234,6 @@ class Player(pg.sprite.Sprite):
         self.status = save_data['status']
         self.load_status(self.status)
 
-    def get_status(self):
-        self.status = {'max_hp': self.max_hp, 'hp': self.hp, 'mp': self.mp,
-                       'attack_power': self.attack_power, 'defense': self.defense, 'speed': self.speed}
-        return self.status
-    
-    def get_pos(self):
-        return self.rect.x, self.rect.y
-    
-    def load_status(self, status):
-        self.max_hp = status['max_hp']
-        self.hp = status['hp']
-        self.mp = status['mp']
-        self.attack_power = status['attack_power']
-        self.defense = status['defense']
-        self.speed = status['speed']
-
 
 class StatusBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
@@ -231,13 +250,10 @@ class StatusBar(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def show_hp(self, screen, player):
-        # show hp on top of the slime, color: red
-        # draw a rect similar to enemy hp bar
         pg.draw.rect(screen, COLOR['red'], (self.rect.x, self.rect.y,
                      player.hp / player.max_hp * self.width, 10))
 
     def show_mp(self, screen, player):
-        # show hp on top of the slime, color: red
         pg.draw.rect(screen, COLOR['blue'], (self.rect.x,
                      self.rect.y + 20, player.mp * 2, 10))
 

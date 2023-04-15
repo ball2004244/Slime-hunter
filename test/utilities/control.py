@@ -35,8 +35,8 @@ class Control:
         # check collision between player and enemy
         if event.button == 1:
             for enemy in enemy_group:
-                self.player.hitbox.colliderect(enemy.rect)
-                enemy.get_damage(self.player.attack_power, self.inventory)
+                if self.player.hitbox.colliderect(enemy.rect):
+                    enemy.get_damage(self.player.attack_power, self.inventory)
 
         # check collision between player and block
         if event.button == 1:

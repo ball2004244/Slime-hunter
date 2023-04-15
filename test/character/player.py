@@ -139,6 +139,9 @@ class Player(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def attack(self, enemy, weapon, inventory):
+        if not self.alive:
+            return
+        
         current_time = pg.time.get_ticks()
         if current_time - self.attack_timer < 500:
             return
@@ -215,6 +218,21 @@ class Player(pg.sprite.Sprite):
 
     def get_pos(self):
         return self.rect.x, self.rect.y
+    
+    def update_hitbox(self):
+        # Hitbox
+        hitbox_size_multiplier = 2
+        hitbox_width = int(self.rect.width * hitbox_size_multiplier)
+        hitbox_height = int(self.rect.height * hitbox_size_multiplier)
+        hitbox_x_offset = int((hitbox_width - self.rect.width) / 2)
+        hitbox_y_offset = int((hitbox_height - self.rect.height) / 2)
+        self.hitbox = pg.Rect(self.rect.x - hitbox_x_offset, self.rect.y - hitbox_y_offset, hitbox_width, hitbox_height)
+
+        # Update hitbox position to match player position
+        hitbox_x_offset = int((self.hitbox.width - self.rect.width) / 2)
+        hitbox_y_offset = int((self.hitbox.height - self.rect.height) / 2)
+        self.hitbox.x = self.rect.x - hitbox_x_offset
+        self.hitbox.y = self.rect.y - hitbox_y_offset
 
 
 class StatusBar(pg.sprite.Sprite):

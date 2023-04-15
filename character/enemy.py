@@ -29,7 +29,7 @@ class Enemy(pg.sprite.Sprite):
 
         self.attack_timer = pg.time.get_ticks()
         self.move_timer = pg.time.get_ticks()
-
+        self.live_timer = pg.time.get_ticks()
 
     def setup_status(self):
         self.max_hp = 10
@@ -105,6 +105,33 @@ class Enemy(pg.sprite.Sprite):
         # reset the timer 
         self.move_timer = current_time
 
+    # make slime move towards the player
+    # use move inplace from pygame
+    def move_towards_player(self, player):
+        current = pg.time.get_ticks()
+        if current - self.move_timer > 11000:
+            self.kill()
+            return
+        
+        # generate a random x and y component for the movement vector
+        dx = random.uniform(-1, 1)
+        dy = random.uniform(-1, 1)
+
+        # add a component that moves the slime towards the player's position
+        player_x, player_y = player.get_pos()
+        slime_x, slime_y = self.get_pos()
+        dx += (player_x - slime_x + random.uniform(-50, 50)) / 100
+        dy += (player_y - slime_y + random.uniform(-50, 50)) / 100
+
+        # normalize the movement vector to have a magnitude of 1
+        magnitude = (dx ** 2 + dy ** 2) ** 0.5
+        dx /= magnitude
+        dy /= magnitude
+
+        # update the slime's position using the movement vector
+        self.rect.x += int(dx * self.speed)
+        self.rect.y += int(dy * self.speed)
+
     def get_save_data(self):
         # get position first
         save_dict = {'name': self.name, 'x': self.rect.x, 'y': self.rect.y,
@@ -118,6 +145,15 @@ class Enemy(pg.sprite.Sprite):
         self.width = save_data['width']
         self.height = save_data['height']
         self.color = save_data['color']
+
+    def __str__(self):
+        return f'I am {self.name}'
+
+    def get_pos(self):
+        return self.rect.x, self.rect.y
+    
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
 
 # create Slime class as a sprite
 class Slime(Enemy):
@@ -137,12 +173,3 @@ class Slime(Enemy):
         self.attack_power = 50
         self.defense = 5
         self.default_speed = 3
-
-    def __str__(self):
-        return f'I am {self.name}'
-
-    def get_pos(self):
-        return self.rect.x, self.rect.y
-    
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
