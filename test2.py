@@ -6,5 +6,5 @@ def main():
 
 if __name__ == "__main__":
     # delete_save()
-    load_game()
+    # load_game()
     main()

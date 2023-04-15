@@ -14,6 +14,7 @@ from utilities.inventory import Inventory, HotBar
 from save.save import save_object, load_object, reset_file, save_to_file, load_from_file
 from map.map import Map
 from state.gameplay import Gameplay
+from state.pause_screen import PauseScreen, Button
 
 # set up windows
 window_setup()
@@ -199,7 +200,16 @@ def show_hp(screen):
     for enemy in enemy_group:
         enemy.show_hp(screen)
 
+# setup buttons
+# center the buttons
+button1 = Button(SCREEN, 'Resume', SCREEN.get_width() // 2 - 100, SCREEN.get_height() // 2 - 100, 200, 50)
+button2 = Button(SCREEN, 'Quit', SCREEN.get_width() // 2 - 100, SCREEN.get_height() // 2 - 25, 200, 50)
+
+pause_screen = PauseScreen(SCREEN)
+pause_screen.setup_buttons(button1, button2)
+
 gameplay = Gameplay(SCREEN)
+gameplay.setup_pause_screen(pause_screen)
 gameplay.setup_map(gamemap)
 gameplay.setup_entity_group(player_group, item_group, enemy_group, block_group)
 gameplay.setup_inventory(inventory, hotbar)

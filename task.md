@@ -1,6 +1,6 @@
 - Gameplay: implement game state
-- Player attack range mechanism
-- Save/Load mechanism
+- Player attack range mechanism: Done
+- Save/Load mechanism: Done
 - Inventory UI(Optional)
 - Fixed object position so that it is not affected by camera movement: Done
 

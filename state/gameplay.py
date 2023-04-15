@@ -1,6 +1,7 @@
 import pygame as pg 
 from pygame.locals import *
 import random
+import sys
 pg.init()
 
 class Gameplay:
@@ -9,6 +10,19 @@ class Gameplay:
         self.timer = pg.time.get_ticks()
         self.spawn_timer = pg.time.get_ticks()
     
+    def setup_pause_screen(self, pause_screen):
+        def mock_function1():
+            print('button1 clicked')
+
+        def mock_function2():
+            pg.quit()
+            sys.exit()
+
+        self.pause_screen = pause_screen
+
+        self.pause_screen.button1.setup_function(mock_function1)
+        self.pause_screen.button2.setup_function(mock_function2)
+
     def setup_map(self, gamemap):
         self.gamemap = gamemap
 
@@ -147,6 +161,10 @@ class Gameplay:
 
         return movable_objects
 
+    def quit(self):
+        pg.quit()
+        sys.exit()
+
     def game_loop(self):
         # fill screen with white
         self.screen.fill((255, 255, 255))
@@ -158,7 +176,7 @@ class Gameplay:
         self.item_group.draw(self.screen)
         # self.block_group.draw(self.screen)
 
-        # # show status
+        # show status
         self.show_status()
         self.hotbar.draw(self.screen)
 
@@ -171,7 +189,7 @@ class Gameplay:
 
 
         # # process the user keyboard + mouse input
-        self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group)          
+        self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group, self.pause_screen)          
 
         self.camera.update(self.gamemap, self.get_movable_objects())
         
