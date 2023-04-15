@@ -21,7 +21,7 @@ class Weapon(Item):
         super().load_data(save_data)
         self.tag = save_data['tag']
 
-
+sword_image = pg.image.load('asset/image/sword_01b.png')
 class Sword(Weapon):
     def __init__(self, x, y, width, height, color=(0, 0, 255)):
         super().__init__(x, y, width, height, color)
@@ -29,7 +29,7 @@ class Sword(Weapon):
         self.attack_power = 10
         self.color = 'blue'
 
-        self.image = pg.image.load('asset/image/sword_01b.png')
+        self.image = sword_image
         self.image = pg.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
         self.rect.x = x

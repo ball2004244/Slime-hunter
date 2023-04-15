@@ -7,21 +7,57 @@ pg.init()
 class Gameplay:
     def __init__(self, SCREEN):
         self.screen = SCREEN
+
         self.timer = pg.time.get_ticks()
         self.spawn_timer = pg.time.get_ticks()
     
+
+    def resume(self):
+        self.control.pause_state = False
+
+    def restart(self):
+        if self.player.alive:
+            return
+        
+        self.player.alive = True
+
+        # reset player's position
+        self.player.rect.x = 700
+        self.player.rect.y = 500
+
+        # reset player's hp
+        self.player.hp = self.player.max_hp
+
+
+        # reset player's inventory
+        self.inventory.empty()
+        self.hotbar.empty()
+
+        # reset items and enemies
+        self.item_group.empty()
+        self.enemy_group.empty()
+
+        # spawn new items 
+        self.create_item(self.item_dict)
+        # reset player's score
+        self.score = 0
+
+    def game_exit(self):
+        self.save_game()
+        pg.quit()
+        sys.exit()
+
     def setup_pause_screen(self, pause_screen):
-        def mock_function1():
-            print('button1 clicked')
-
-        def mock_function2():
-            pg.quit()
-            sys.exit()
-
         self.pause_screen = pause_screen
 
-        self.pause_screen.button1.setup_function(mock_function1)
-        self.pause_screen.button2.setup_function(mock_function2)
+        self.pause_screen.button1.setup_function(self.resume)
+        self.pause_screen.button2.setup_function(self.game_exit)
+
+    def setup_game_over(self, game_over_screen):
+        self.game_over_screen = game_over_screen
+
+        self.game_over_screen.button1.setup_function(self.restart)
+        self.game_over_screen.button2.setup_function(self.game_exit)
 
     def setup_map(self, gamemap):
         self.gamemap = gamemap
@@ -166,14 +202,27 @@ class Gameplay:
         sys.exit()
 
     def game_loop(self):
+        # process the user keyboard + mouse input
+        self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group, self.pause_screen, self.game_over_screen) 
+        
+        self.fps_clock.display_fps(self.screen)
+        pg.display.update()
+
+        if self.control.is_paused():
+            # reset the timer
+            current = pg.time.get_ticks()
+            self.timer = current
+            self.spawn_timer = current
+            return
+        
         # fill screen with white
         self.screen.fill((255, 255, 255))
 
         self.gamemap.render(self.screen)
     
+        self.item_group.draw(self.screen)
         self.player_group.draw(self.screen)
         self.enemy_group.draw(self.screen)
-        self.item_group.draw(self.screen)
         # self.block_group.draw(self.screen)
 
         # show status
@@ -187,17 +236,12 @@ class Gameplay:
         self.spawn_enemy(self.Enemy, self.color, self.coin)
         self.enemy_movement()
 
-
-        # # process the user keyboard + mouse input
-        self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group, self.pause_screen)          
-
+        # update camera
         self.camera.update(self.gamemap, self.get_movable_objects())
         
+
         # auto save every 10 seconds
-        self.auto_save()
+        # self.auto_save()
 
         # immediately save
         # self.save_game() 
-        
-        self.fps_clock.display_fps(self.screen)
-        pg.display.update()

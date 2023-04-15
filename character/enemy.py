@@ -155,10 +155,18 @@ class Enemy(pg.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
+
+slime_image = pg.image.load('asset/image/slime.png')
 # create Slime class as a sprite
 class Slime(Enemy):
     def __init__(self, x, y, width, height, color, resource):
         super().__init__(x, y, width, height, color, resource)
+
+        self.image = slime_image
+        self.image = pg.transform.scale(self.image, (width, height))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
         self.setup_status()
         self.tag = 'enemy'

@@ -1,4 +1,4 @@
-- Gameplay: implement game state
+- Gameplay: implement game state: Done
 - Player attack range mechanism: Done
 - Save/Load mechanism: Done
 - Inventory UI(Optional)

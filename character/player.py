@@ -6,12 +6,12 @@ pg.init()
 
 # create a character class as a sprite
 
-
+player_image = pg.image.load('asset/image/player.png')
 class Player(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()
-        self.image = pg.Surface((width, height))
-        self.image.fill(color)
+        self.image = player_image
+        self.image = pg.transform.scale(self.image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -42,7 +42,7 @@ class Player(pg.sprite.Sprite):
         self.default_speed = 3
         self.speed = self.default_speed
 
-        print(self.get_status())
+        temp = self.get_status()
 
     def setup_equipment(self):
         self.armor = None

@@ -15,6 +15,7 @@ from save.save import save_object, load_object, reset_file, save_to_file, load_f
 from map.map import Map
 from state.gameplay import Gameplay
 from state.pause_screen import PauseScreen, Button
+from state.game_over import GameOver
 
 # set up windows
 window_setup()
@@ -202,14 +203,20 @@ def show_hp(screen):
 
 # setup buttons
 # center the buttons
-button1 = Button(SCREEN, 'Resume', SCREEN.get_width() // 2 - 100, SCREEN.get_height() // 2 - 100, 200, 50)
-button2 = Button(SCREEN, 'Quit', SCREEN.get_width() // 2 - 100, SCREEN.get_height() // 2 - 25, 200, 50)
+button1 = Button(SCREEN, 'Resume', SCREEN.get_width() // 2 - 100, SCREEN.get_height() * 3 / 5 - 50, 200, 50)
+button2 = Button(SCREEN, 'Quit', SCREEN.get_width() // 2 - 100, SCREEN.get_height() * 3 / 5 + 50, 200, 50)
 
 pause_screen = PauseScreen(SCREEN)
 pause_screen.setup_buttons(button1, button2)
 
+restart_button = Button(SCREEN, 'Restart', SCREEN.get_width() // 2 - 100, SCREEN.get_height() * 3 / 5 - 50, 200, 50)
+quit_button = Button(SCREEN, 'Quit', SCREEN.get_width() // 2 - 100, SCREEN.get_height() * 3 / 5 + 50, 200, 50)
+game_over_screen = GameOver(SCREEN)
+game_over_screen.setup_buttons(restart_button, quit_button)
+
 gameplay = Gameplay(SCREEN)
 gameplay.setup_pause_screen(pause_screen)
+gameplay.setup_game_over(game_over_screen)
 gameplay.setup_map(gamemap)
 gameplay.setup_entity_group(player_group, item_group, enemy_group, block_group)
 gameplay.setup_inventory(inventory, hotbar)

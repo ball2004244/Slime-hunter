@@ -10,7 +10,7 @@ class Control:
         self.player = player
         self.inventory = inventory
         self.hotbar = hotbar
-        self.pause_state = False
+        self.pause_state = True
 
     def update_mouse_rect(self, x, y):
         # create a rect for mouse
@@ -23,14 +23,28 @@ class Control:
         
         pause_screen.draw()   
 
+    def is_paused(self):
+        return self.pause_state
 
     def pause_logic(self, pause_screen):
         # check collision between mouse and button
-        # use colliderect to check collision between mouse and button
         if pause_screen.button1.rect.colliderect(self.mouse_rect):
             pause_screen.button1.activate()
         if pause_screen.button2.rect.colliderect(self.mouse_rect):
             pause_screen.button2.activate()
+
+    def game_over(self, game_over_screen):
+        # game over
+        if self.player.alive:
+            return
+        
+        game_over_screen.draw()
+    def restart_logic(self, game_over_screen):
+        # check collision between mouse and button
+        if game_over_screen.button1.rect.colliderect(self.mouse_rect):
+            game_over_screen.button1.activate()
+        if game_over_screen.button2.rect.colliderect(self.mouse_rect):
+            game_over_screen.button2.activate()
 
     def move(self, keys):
         # moving the player
@@ -52,12 +66,17 @@ class Control:
 
         self.player.run()
 
-    def mouse_check(self, event, player_group, enemy_group, item_group, block_group, pause_screen):
+    def mouse_check(self, event, player_group, enemy_group, item_group, block_group, pause_screen, game_over_screen):
 
-        # check collision between mouse and button
+        # check collision between mouse and button in pause screen
         if event.button == 1:
             if self.pause_state:
                 self.pause_logic(pause_screen)
+
+        # check collision between mouse and button in restart screen
+        if event.button == 1:
+            if not self.player.alive:
+                self.restart_logic(game_over_screen)
 
         # check collision between player and enemy
         if event.button == 1:
@@ -80,7 +99,7 @@ class Control:
                 self.player.pickup(self.inventory, item)
          
 
-    def event_loop(self, player_group, item_group, enemy_group, block_group, pause_screen):
+    def event_loop(self, player_group, item_group, enemy_group, block_group, pause_screen, game_over_screen):
         # update mouse rect
         mouse_pos = pg.mouse.get_pos()
         self.update_mouse_rect(mouse_pos[0], mouse_pos[1])
@@ -99,19 +118,14 @@ class Control:
         #  pause screen
         self.pause(pause_screen)
 
+        if not self.player.alive:
+            self.game_over(game_over_screen)
+
         # check keyboard input
         for event in pg.event.get():
             if event.type == QUIT:
                 pg.quit()
                 sys.exit()
-
-            elif event.type == KEYDOWN:
-                # toggle pause
-                if event.key == K_p:
-                    if self.pause_state:
-                        self.pause_state = False
-                    else:
-                        self.pause_state = True
 
             elif event.type == KEYDOWN:
                 # open inventory
@@ -122,6 +136,12 @@ class Control:
                 elif event.key in [K_1, K_2, K_3, K_4]:
                     self.hotbar.select_slot(event.key - 48)
 
+                # toggle pause
+                elif event.key == K_p:
+                    if self.pause_state:
+                        self.pause_state = False
+                    else:
+                        self.pause_state = True
 
             elif event.type == MOUSEBUTTONDOWN:
-                self.mouse_check(event, player_group, enemy_group, item_group, block_group, pause_screen)
+                self.mouse_check(event, player_group, enemy_group, item_group, block_group, pause_screen, game_over_screen)

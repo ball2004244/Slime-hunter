@@ -10,7 +10,7 @@ class Armor(Item):
         self.tag = 'armor'
         self.defense = 0
 
-
+armor_image = pg.image.load('asset/image/armor_01a.png')
 class LeatherArmor(Armor):
     def __init__(self, x, y, width, height, color=(255, 255, 255)):
         super().__init__(x, y, width, height, color)
@@ -18,7 +18,7 @@ class LeatherArmor(Armor):
         self.defense = 10
         self.color = color
 
-        self.image = pg.image.load('asset/image/armor_01a.png')
+        self.image = armor_image
         self.image = pg.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
         self.rect.x = x

@@ -88,6 +88,9 @@ class Inventory:
         self.capacity = data_dict['capacity']
         self.stack_capacity = data_dict['stack_capacity']
 
+    def empty(self):
+        self.item_map = {}
+        self.item_group.empty()
 
 class HotBar(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
@@ -217,3 +220,8 @@ class HotBar(pg.sprite.Sprite):
                 item = item_dict[data['name']](0, 0, 0, 0, data['color'])
                 item.load_data(data)
                 self.hotbar_slots[save_data.index(data)] = item
+
+    def empty(self):
+        self.hotbar_items = {}
+        self.hotbar_slots = {0: None, 1: None, 2: None, 3: None}
+
