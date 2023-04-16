@@ -11,8 +11,9 @@ The game is written in Pygame. The general idea is a simple 2D game with top-dow
 - WASD/arrow keys to move
 - Left click to attack
 - Right click to interact with objects
-- I to open inventory/crafting menu
-- Esc to visit menu
+- CTRL to run
+- I to open inventory
+- P to pause
 
 ## Credits
 @ball2004244

@@ -10,6 +10,7 @@ class Gameplay:
 
         self.timer = pg.time.get_ticks()
         self.spawn_timer = pg.time.get_ticks()
+        self.score = 0 
     
 
     def resume(self):
@@ -39,6 +40,7 @@ class Gameplay:
 
         # spawn new items 
         self.create_item(self.item_dict)
+
         # reset player's score
         self.score = 0
 
@@ -201,6 +203,10 @@ class Gameplay:
         pg.quit()
         sys.exit()
 
+    def update_score(self):
+        self.score = self.inventory.item_map.get('coin', 0) + self.hotbar.hotbar_items.get('coin', 0)
+        self.game_over_screen.score = self.score
+
     def game_loop(self):
         # process the user keyboard + mouse input
         self.control.event_loop(self.player_group, self.item_group, self.enemy_group, self.block_group, self.pause_screen, self.game_over_screen) 
@@ -245,3 +251,6 @@ class Gameplay:
 
         # immediately save
         # self.save_game() 
+
+        # update score
+        self.update_score()

@@ -199,7 +199,7 @@ class HotBar(pg.sprite.Sprite):
         save_data = []
         for item in self.hotbar_slots.values():
             if item != None:
-                save_data.append(item.get_save_data())
+                save_data.append(item.get_save_data()) 
             else:
                 save_data.append(None)
 
