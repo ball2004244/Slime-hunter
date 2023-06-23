@@ -17,6 +17,7 @@ The game is written in Pygame. The general idea is a simple 2D game with top-dow
 
 ## Credits
 @ball2004244
+@anhongpham
 
 ## Current Version
 Version 0.1.0:
